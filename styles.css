@@ -1663,3 +1663,157 @@ html[data-theme="dark"] .nav-links {
   border-radius: 24px;
   padding: 12px;
 }
+
+.avatar-modal-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: min(92vw, 520px);
+  padding: 22px;
+}
+
+.avatar-profile-info {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 22px;
+  text-align: center;
+  background: rgba(2, 6, 23, 0.86);
+  border: 1px solid rgba(45, 212, 191, 0.40);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.12),
+    0 0 28px rgba(45, 212, 191, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.avatar-profile-info h2 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.avatar-profile-info p {
+  margin: 4px 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.avatar-profile-info a {
+  display: inline-flex;
+  margin-top: 10px;
+  color: #67e8f9;
+  font-weight: 800;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.avatar-profile-info a:hover {
+  color: #a7f3d0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+html[data-theme="light"] .avatar-profile-info h2,
+html[data-theme="dark"] .avatar-profile-info h2 {
+  color: #ffffff;
+}
+
+html[data-theme="light"] .avatar-profile-info p,
+html[data-theme="dark"] .avatar-profile-info p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="light"] .avatar-profile-info a,
+html[data-theme="dark"] .avatar-profile-info a {
+  color: #67e8f9;
+}
+
+@media (max-width: 560px) {
+  .avatar-modal-frame {
+    max-width: 94vw;
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .avatar-profile-info {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .avatar-profile-info p {
+    font-size: 0.92rem;
+  }
+}
+
+
+/* Smooth pop-up transitions for avatar profile and research-direction lightbox. */
+.avatar-modal,
+.direction-lightbox {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 220ms linear,
+    visibility 220ms linear;
+}
+
+.avatar-modal.is-open,
+.direction-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.avatar-modal-frame {
+  opacity: 0;
+  transform: translateY(10px) scale(0.965);
+  transition:
+    opacity 180ms linear,
+    transform 220ms linear;
+  will-change: opacity, transform;
+}
+
+.avatar-modal.is-open .avatar-modal-frame {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.direction-lightbox img {
+  opacity: 0;
+  transform: translateY(10px) scale(0.965);
+  transition:
+    opacity 180ms linear,
+    transform 220ms linear;
+  will-change: opacity, transform;
+}
+
+.direction-lightbox.is-open img {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.direction-lightbox p,
+.direction-lightbox-close {
+  opacity: 0;
+  transition: opacity 180ms linear;
+}
+
+.direction-lightbox.is-open p,
+.direction-lightbox.is-open .direction-lightbox-close {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-modal,
+  .avatar-modal-frame,
+  .direction-lightbox,
+  .direction-lightbox img,
+  .direction-lightbox p,
+  .direction-lightbox-close {
+    transition: none;
+    transform: none;
+  }
+}

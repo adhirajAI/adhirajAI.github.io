@@ -50,18 +50,42 @@ function initAvatarViewer() {
   const button = document.querySelector('.avatar-button');
   const modal = document.querySelector('#avatar-modal');
   if (!button || !modal) return;
+
+  const popupTransitionMs = 220;
+  let closeTimer = null;
+
   function openAvatar() {
+    if (closeTimer) {
+      window.clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+
     const modalImage = modal.querySelector('img[data-src]');
     if (modalImage && !modalImage.getAttribute('src')) {
       modalImage.setAttribute('src', modalImage.dataset.src);
     }
+
     modal.hidden = false;
     document.body.classList.add('avatar-expanded');
+
+    window.requestAnimationFrame(() => {
+      modal.classList.add('is-open');
+    });
   }
+
   function closeAvatar() {
-    modal.hidden = true;
+    if (modal.hidden) return;
+
+    modal.classList.remove('is-open');
     document.body.classList.remove('avatar-expanded');
+
+    if (closeTimer) window.clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(() => {
+      modal.hidden = true;
+      closeTimer = null;
+    }, popupTransitionMs);
   }
+
   button.addEventListener('click', openAvatar);
   modal.addEventListener('click', closeAvatar);
   document.addEventListener('keydown', (event) => {
@@ -651,17 +675,37 @@ function initResearchDirectionCarousel() {
     if (userInitiated) pauseAfterInteraction();
   }
 
+  const lightboxTransitionMs = 220;
+  let lightboxCloseTimer = null;
+
   function openLightbox(direction) {
+    if (lightboxCloseTimer) {
+      window.clearTimeout(lightboxCloseTimer);
+      lightboxCloseTimer = null;
+    }
+
     lightboxImage.src = direction.image;
     lightboxImage.alt = direction.alt;
     lightbox.hidden = false;
     document.body.classList.add('direction-expanded');
+
+    window.requestAnimationFrame(() => {
+      lightbox.classList.add('is-open');
+    });
   }
 
   function closeLightbox() {
-    lightbox.hidden = true;
-    lightboxImage.src = '';
+    if (lightbox.hidden) return;
+
+    lightbox.classList.remove('is-open');
     document.body.classList.remove('direction-expanded');
+
+    if (lightboxCloseTimer) window.clearTimeout(lightboxCloseTimer);
+    lightboxCloseTimer = window.setTimeout(() => {
+      lightbox.hidden = true;
+      lightboxImage.src = '';
+      lightboxCloseTimer = null;
+    }, lightboxTransitionMs);
   }
 
   prev.addEventListener('click', () => move(-1));
