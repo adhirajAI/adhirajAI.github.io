@@ -346,7 +346,7 @@ const RESEARCH_DIRECTIONS = [
     title: 'PairAlign-style autoregressive neural tokenizers',
     image: 'assets/research-directions/research-direction-2.webp',
     alt: 'Diagram of a PairAlign-style autoregressive neural tokenizer for multimodal foundation models.',
-    summary: 'This direction treats tokenization as conditional sequence generation: an encoder produces a conditioning representation, and an autoregressive decoder emits compact token streams. The goal is to learn information-preserving symbolic interfaces for efficient reasoning, generation, and adaptation in multimodal foundation models.'
+    summary: 'This direction is currently based on my PairAlign paper. PairAlign treats tokenization as conditional sequence generation: an encoder produces a conditioning representation, and an autoregressive decoder emits compact token streams. The goal is to learn information-preserving symbolic interfaces for efficient reasoning, generation, and adaptation in multimodal foundation models.'
   },
   {
     number: 3,
