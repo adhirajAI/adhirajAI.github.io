@@ -215,11 +215,11 @@ html[data-theme="dark"] .theme-option.active {
 .section-heading { max-width: 860px; margin-bottom: 34px; }
 .section-copy { margin-top: 12px; max-width: 820px; }
 .positioning-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-.card, .timeline-item, .repo-card, .award-card {
+.card, .timeline-item, .repo-card, .award-card, .project-card, .competition-card {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px;
 }
-.card p, .timeline-item p, .repo-card p, .award-card p { margin-top: 12px; }
-.card:hover, .repo-card:hover, .award-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); transition: 180ms ease; }
+.card p, .timeline-item p, .repo-card p, .award-card p, .project-card p, .competition-card p { margin-top: 12px; }
+.card:hover, .repo-card:hover, .award-card:hover, .project-card:hover, .competition-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); transition: 180ms ease; }
 
 .paper-list { display: grid; gap: 18px; }
 .paper {
@@ -328,6 +328,41 @@ html[data-theme="dark"] .theme-option.active {
 
 .repo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .repo-card span { display: block; font-weight: 800; font-size: 1.1rem; }
+.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.project-card h3 { font-size: 1.2rem; }
+.project-card h3 a { color: var(--text); }
+.project-card h3 a:hover,
+.project-card p a:hover { color: var(--accent); }
+.project-card p a { color: var(--accent); font-weight: 850; }
+.project-meta {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.competition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.competition-card h3 { font-size: 1.12rem; line-height: 1.35; }
+.competition-card h3 a { color: var(--text); }
+.competition-card h3 a:hover { color: var(--accent); }
+.competition-meta {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+.featured-competition {
+  border-color: #b9c7ff;
+  background: linear-gradient(135deg, var(--surface), var(--accent-soft));
+}
 .media-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .media-card {
   overflow: hidden;
@@ -1336,7 +1371,7 @@ html[data-theme="dark"] .nav-links.open {
 
 @media (max-width: 860px) {
   .section { padding: 72px 0; }
-  .hero-grid, .positioning-grid, .repo-grid, .media-grid, .award-grid, .academic-grid, .service-grid { grid-template-columns: 1fr; }
+  .hero-grid, .positioning-grid, .repo-grid, .project-grid, .competition-grid, .media-grid, .award-grid, .academic-grid, .service-grid { grid-template-columns: 1fr; }
   .direction-carousel { padding: 20px; border-radius: 26px; }
   .direction-stage { min-height: clamp(245px, 58vw, 440px); border-radius: 22px; }
   .direction-card { width: 90%; }
@@ -1423,4 +1458,8 @@ html[data-theme="dark"] .nav-links.open {
 .pairalign-jump:hover,
 .pairalign-jump:focus-visible {
   color: var(--accent);
+}
+
+@media (max-width: 1100px) {
+  .competition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
