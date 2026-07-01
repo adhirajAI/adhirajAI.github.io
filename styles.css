@@ -77,9 +77,12 @@ h3 { font-size: 1.25rem; }
   backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(219, 226, 234, 0.7);
 }
-.nav { height: 72px; display: flex; align-items: center; justify-content: space-between; }
+.nav { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .brand {
   width: 44px; height: 44px; display: grid; place-items: center;
+  flex: 0 0 44px;
+  position: relative;
+  z-index: 2;
   border-radius: 14px; background: var(--text); color: white; font-weight: 800;
   overflow: hidden;
 }
@@ -99,14 +102,21 @@ h3 { font-size: 1.25rem; }
 }
 .nav-links {
   display: flex;
-  gap: 16px;
+  gap: clamp(8px, 1.1vw, 16px);
   align-items: center;
+  min-width: 0;
+  max-width: calc(100% - 64px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  white-space: nowrap;
   color: var(--muted);
   font-weight: 600;
   padding: 8px 10px 8px 16px;
   border: 1px solid transparent;
   border-radius: 999px;
 }
+.nav-links::-webkit-scrollbar { display: none; }
 .nav-links a:hover { color: var(--text); }
 .nav-toggle { display: none; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); padding: 10px 14px; font-weight: 700; }
 
@@ -114,6 +124,7 @@ h3 { font-size: 1.25rem; }
   border: 0;
   padding: 0;
   cursor: pointer;
+  flex: 0 0 44px;
 }
 
 .avatar-button:focus-visible,
@@ -1365,6 +1376,20 @@ html[data-theme="light"] .nav-links.open {
 html[data-theme="dark"] .nav-links.open {
   background: #0a0e1f;
 }
+
+@media (min-width: 861px) and (max-width: 1180px) {
+  .nav-links {
+    gap: 8px;
+    font-size: 0.86rem;
+    padding-inline: 12px 8px;
+  }
+
+  .theme-selector {
+    transform: scale(0.92);
+    transform-origin: right center;
+  }
+}
+
 @media (max-width: 980px) {
   .paper-main { grid-template-columns: 150px minmax(0, 1fr); }
 }
