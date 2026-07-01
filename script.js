@@ -32,6 +32,20 @@ function initThemeSelector() {
   }, 60 * 1000);
 }
 
+
+const AVATAR_PRELOAD_SOURCES = [
+  'https://github.com/adhirajAI.png?size=88',
+  'https://github.com/adhirajAI.png?size=640'
+];
+
+function preloadAvatarImages() {
+  AVATAR_PRELOAD_SOURCES.forEach((src) => {
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = src;
+  });
+}
+
 function initAvatarViewer() {
   const button = document.querySelector('.avatar-button');
   const modal = document.querySelector('#avatar-modal');
@@ -40,8 +54,6 @@ function initAvatarViewer() {
     const modalImage = modal.querySelector('img[data-src]');
     if (modalImage && !modalImage.getAttribute('src')) {
       modalImage.setAttribute('src', modalImage.dataset.src);
-      modalImage.setAttribute('loading', 'lazy');
-      modalImage.setAttribute('decoding', 'async');
     }
     modal.hidden = false;
     document.body.classList.add('avatar-expanded');
@@ -687,6 +699,7 @@ function initResearchDirectionCarousel() {
 
 initSmoothSectionScroll();
 initThemeSelector();
+preloadAvatarImages();
 initAvatarViewer();
 renderPaperCards();
 hydratePdfThumbnails();
