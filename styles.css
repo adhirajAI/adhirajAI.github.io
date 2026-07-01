@@ -1380,16 +1380,25 @@ html[data-theme="dark"] .nav-links.open {
   .direction-lightbox img { max-width: 98vw; max-height: 82vh; border-radius: 12px; }
 }
 
-#pairalign-paper {
+#pairalign-paper,
+#codecsep-paper,
+#wav2tok2-paper,
+#wav2tok-paper,
+#enc-dec-awe-paper {
   scroll-margin-top: 120px;
 }
 
 @media (max-width: 768px) {
-  #pairalign-paper {
+  #pairalign-paper,
+  #codecsep-paper,
+  #wav2tok2-paper,
+  #wav2tok-paper,
+  #enc-dec-awe-paper {
     scroll-margin-top: 92px;
   }
 }
 
+.paper-jump,
 .pairalign-jump {
   color: inherit;
   font-weight: inherit;
@@ -1398,6 +1407,8 @@ html[data-theme="dark"] .nav-links.open {
   text-underline-offset: 0.18em;
 }
 
+.paper-jump:hover,
+.paper-jump:focus-visible,
 .pairalign-jump:hover,
 .pairalign-jump:focus-visible {
   color: var(--accent);

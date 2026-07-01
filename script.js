@@ -79,6 +79,7 @@ if (navToggle && navLinks) {
 
 const PAPERS = [
   {
+    id: 'wav2tok-paper',
     venue: 'ICLR 2023 Poster',
     title: 'wav2tok: Deep Sequence Tokenizer for Audio Retrieval',
     overview: 'wav2tok is a neural audio tokenizer that learns discrete token sequences for retrieval by vector-quantizing encoder representations and training paired audio views to predict each other’s token strings with a CTC-style objective. It can be interpreted as an early sequence-target analogue of predictive representation learning: rather than reconstructing waveforms, the model learns symbolic audio representations by predicting content-preserving token sequences across acoustically varied views.',
@@ -89,6 +90,7 @@ const PAPERS = [
     featured: false
   },
   {
+    id: 'wav2tok2-paper',
     venue: 'INTERSPEECH 2026 / arXiv',
     title: 'wav2tok 2.0: Scalable Audio Tokenization Maintaining Explicit Pairwise Token Alignment for Efficient Audio Retrieval',
     overview: 'wav2tok 2.0 is a neural audio tokenizer for efficient retrieval. It extends the original wav2tok line by making pairwise token alignment more explicit and scalable. It learns discrete audio token sequences through cross-view symbolic prediction, retaining a CTC-style alignment objective while adding DTW-guided frame-aligned prediction of paired-view token targets. This strengthens the sequence-target predictive learning view: paired views of the same content are trained to predict each other’s token strings, making the learned tokenizer more retrieval-oriented and alignment-aware.',
@@ -98,6 +100,7 @@ const PAPERS = [
     featured: false
   },
   {
+    id: 'enc-dec-awe-paper',
     venue: 'INTERSPEECH 2023 Poster',
     title: 'Enc-Dec RNN Acoustic Word Embeddings learned via Pairwise Prediction',
     overview: ' This work studies the fixed-vector analogue of the same predictive sequence-target idea. Instead of representing audio as a token string, it learns compact acoustic word embeddings by conditioning an autoregressive decoder on one view’s fixed-dimensional embedding and predicting the paired view’s symbolic sequence target. The objective injects temporal and sequence-level information into a compact acoustic fingerprint, making it more useful for retrieval and comparison.',
@@ -117,6 +120,7 @@ const PAPERS = [
     featured: false
   },
   {
+    id: 'codecsep-paper',
     venue: 'TMLR 2026',
     title: 'CodecSep: Prompt-Driven Universal Sound Separation on Neural Audio Codec Latents',
     overview: 'CodecSep studies whether neural audio codec latents can serve as structured operating spaces for downstream audio intelligence. It provides evidence that DAC/NAC latents preserve source-compositional structure and shows that prompt-guided source separation can be performed directly through latent masking. This motivates a codes-in / latent-processing / codes-out pathway, where compressed codec codes are dequantized to latents, processed directly, and requantized to output codes for efficient codec-native audio processing.',
@@ -180,18 +184,34 @@ function escapeHtml(value) {
   })[char]);
 }
 
-function linkPairAlignMentions(root = document.body) {
-  const target = document.querySelector('#pairalign-paper');
-  if (!root || !target) return;
+const PAPER_JUMP_TERMS = [
+  { pattern: 'PairAlign', target: 'pairalign-paper', label: 'PairAlign paper' },
+  { pattern: 'CodecSep', target: 'codecsep-paper', label: 'CodecSep paper' },
+  { pattern: 'wav2tok 2.0', target: 'wav2tok2-paper', label: 'wav2tok 2.0 paper' },
+  { pattern: 'Enc-Dec AWE', target: 'enc-dec-awe-paper', label: 'Enc-Dec AWE paper' },
+  { pattern: 'Enc-Dec RNN Acoustic Word Embeddings', target: 'enc-dec-awe-paper', label: 'Enc-Dec AWE paper' },
+  { pattern: 'wav2tok', target: 'wav2tok-paper', label: 'wav2tok paper' }
+];
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function linkPaperMentions(root = document.body) {
+  if (!root) return;
+
+  const availableTerms = PAPER_JUMP_TERMS.filter((term) => document.querySelector(`#${term.target}`));
+  if (!availableTerms.length) return;
+
+  const mentionRegex = new RegExp(`(${availableTerms.map((term) => escapeRegExp(term.pattern)).join('|')})`, 'gi');
   const skipTags = new Set(['A', 'SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       const parent = node.parentElement;
       if (!parent) return NodeFilter.FILTER_REJECT;
       if (skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
-      if (parent.closest('a, .pairalign-jump')) return NodeFilter.FILTER_REJECT;
-      return /PairAlign/i.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      if (parent.closest('a, .paper-jump, .pairalign-jump')) return NodeFilter.FILTER_REJECT;
+      mentionRegex.lastIndex = 0;
+      return mentionRegex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
     }
   });
 
@@ -200,21 +220,28 @@ function linkPairAlignMentions(root = document.body) {
 
   nodes.forEach((node) => {
     const fragment = document.createDocumentFragment();
-    const parts = node.nodeValue.split(/(PairAlign)/gi);
+    mentionRegex.lastIndex = 0;
+    const parts = node.nodeValue.split(mentionRegex);
     parts.forEach((part) => {
-      if (/^PairAlign$/i.test(part)) {
+      if (!part) return;
+      const match = availableTerms.find((term) => term.pattern.toLowerCase() === part.toLowerCase());
+      if (match) {
         const link = document.createElement('a');
-        link.href = '#pairalign-paper';
-        link.className = 'pairalign-jump';
+        link.href = `#${match.target}`;
+        link.className = match.target === 'pairalign-paper' ? 'paper-jump pairalign-jump' : 'paper-jump';
         link.textContent = part;
-        link.setAttribute('aria-label', 'Jump to the PairAlign paper');
+        link.setAttribute('aria-label', `Jump to the ${match.label}`);
         fragment.appendChild(link);
-      } else if (part) {
+      } else {
         fragment.appendChild(document.createTextNode(part));
       }
     });
     node.replaceWith(fragment);
   });
+}
+
+function linkPairAlignMentions(root = document.body) {
+  linkPaperMentions(root);
 }
 
 function createPaperCard(paper, index) {
@@ -504,8 +531,8 @@ function initResearchDirectionCarousel() {
     kicker.textContent = `Direction ${direction.number} of ${RESEARCH_DIRECTIONS.length}`;
     title.textContent = direction.title;
     summary.textContent = direction.summary;
-    linkPairAlignMentions(title);
-    linkPairAlignMentions(summary);
+    linkPaperMentions(title);
+    linkPaperMentions(summary);
     track.replaceChildren(
       makeCard(active - 1, 'prev'),
       makeCard(active, 'active'),
@@ -596,4 +623,4 @@ renderPaperCards();
 hydratePdfThumbnails();
 renderMediaCards();
 initResearchDirectionCarousel();
-linkPairAlignMentions(document.body);
+linkPaperMentions(document.body);
