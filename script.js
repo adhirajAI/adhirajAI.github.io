@@ -597,8 +597,20 @@ function initResearchDirectionCarousel() {
   let isHoverPaused = false;
   let touchStartX = 0;
   let touchStartY = 0;
-  const delay = 6500;
-  const manualPauseMs = 5 * 60 * 1000;
+  const delay = 5200;
+  const manualPauseMs = 45 * 1000;
+
+  function prefersReducedCarouselMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function preloadResearchDirectionImages() {
+    RESEARCH_DIRECTIONS.forEach((direction) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = direction.image;
+    });
+  }
 
   dots.innerHTML = RESEARCH_DIRECTIONS.map((direction, index) => (
     `<button class="direction-dot" type="button" aria-label="Show research direction ${direction.number}" data-index="${index}"></button>`
@@ -617,16 +629,18 @@ function initResearchDirectionCarousel() {
   }
 
   function startAuto() {
-    if (isHoverPaused) return;
+    if (isHoverPaused || prefersReducedCarouselMotion()) return;
     stopAuto();
-    timer = window.setInterval(() => render(active + 1), delay);
+    timer = window.setInterval(() => move(1, false), delay);
   }
 
   function pauseAfterInteraction() {
     stopAuto();
     clearResume();
+    carousel.classList.add('is-user-paused');
     resumeTimer = window.setTimeout(() => {
       resumeTimer = null;
+      carousel.classList.remove('is-user-paused');
       startAuto();
     }, manualPauseMs);
   }
