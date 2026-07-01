@@ -405,21 +405,21 @@ const RESEARCH_DIRECTIONS = [
     title: 'Codec-native audio intelligence',
     image: 'assets/research-directions/research-direction-5.webp',
     alt: 'Diagram comparing traditional audio processing with codec-native audio processing across edge, network, and server stages.',
-    summary: 'This direction studies neural audio codec representations as computational operating spaces. Instead of repeatedly decoding to waveform space, codec-native systems can operate directly over codes or latents, enabling lower-bandwidth, lower-latency, codes-in / codes-out audio intelligence for edge-server deployment.'
+    summary: 'This direction is currently grounded in my CodecSep paper. CodecSep studies neural audio codec representations as computational operating spaces. Instead of repeatedly decoding to waveform space, codec-native systems can operate directly over codes or latents, enabling lower-bandwidth, lower-latency, codes-in / codes-out audio intelligence for edge-server deployment.'
   },
   {
     number: 6,
     title: 'Universal source separation and enhancement',
     image: 'assets/research-directions/research-direction-6.webp',
     alt: 'Diagram of prompt-guided universal sound separation and enhancement from mixture audio.',
-    summary: 'This direction studies prompt-guided systems that isolate or enhance requested sounds from complex mixtures. The emphasis is on open-set source queries, generalization to unseen sound classes, and controllable audio processing driven by natural-language or hybrid prompts.'
+    summary: 'This direction is currently grounded in my CodecSep paper. CodecSep studies prompt-guided systems that isolate or enhance requested sounds from complex mixtures. The emphasis is on open-set source queries, generalization to unseen sound classes, and controllable audio processing driven by natural-language or hybrid prompts.'
   },
   {
     number: 7,
     title: 'Audio retrieval and audio fingerprinting with tokens and embeddings',
     image: 'assets/research-directions/research-direction-7.webp',
     alt: 'Diagram of audio retrieval and fingerprinting using token-sequence and embedding-based representations.',
-    summary: 'This direction combines symbolic token-sequence fingerprints with fixed-dimensional embeddings for robust audio retrieval. It covers query-by-example search, semantic retrieval, inverted or n-gram token indexing, and vector search over compact acoustic representations.'
+    summary: 'This direction is grounded in my wav2tok 2.0 and Enc-Dec AWE papers. It combines symbolic token-sequence fingerprints with fixed-dimensional embeddings for robust audio retrieval. It covers query-by-example search, semantic retrieval, inverted or n-gram token indexing, and vector search over compact acoustic representations.'
   }
 ];
 
