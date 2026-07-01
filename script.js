@@ -108,6 +108,7 @@ const PAPERS = [
     featured: false
   },
   {
+    id: 'pairalign-paper',
     venue: 'arXiv 2026 / under review at TMLR',
     title: 'PairAlign: A Framework for Sequence Tokenization via Self-Alignment with Applications to Audio Tokenization',
     overview: ' PairAlign is an autoregressive neural tokenizer for audio. It formulates tokenization as conditional sequence generation: an encoder maps audio to a continuous condition, and an autoregressive decoder emits a compact symbolic sequence from BOS to EOS, learning token identity, order, length, and termination. I view PairAlign as a symbolic sequence analogue of JEPA-style predictive learning: instead of predicting only continuous latent targets across views, it predicts compact symbolic sequence targets across content-preserving views, using alignment-aware and contrastive objectives to reduce collapse and preserve discriminative structure.',
@@ -179,9 +180,47 @@ function escapeHtml(value) {
   })[char]);
 }
 
+function linkPairAlignMentions(root = document.body) {
+  const target = document.querySelector('#pairalign-paper');
+  if (!root || !target) return;
+
+  const skipTags = new Set(['A', 'SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('a, .pairalign-jump')) return NodeFilter.FILTER_REJECT;
+      return /PairAlign/i.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach((node) => {
+    const fragment = document.createDocumentFragment();
+    const parts = node.nodeValue.split(/(PairAlign)/gi);
+    parts.forEach((part) => {
+      if (/^PairAlign$/i.test(part)) {
+        const link = document.createElement('a');
+        link.href = '#pairalign-paper';
+        link.className = 'pairalign-jump';
+        link.textContent = part;
+        link.setAttribute('aria-label', 'Jump to the PairAlign paper');
+        fragment.appendChild(link);
+      } else if (part) {
+        fragment.appendChild(document.createTextNode(part));
+      }
+    });
+    node.replaceWith(fragment);
+  });
+}
+
 function createPaperCard(paper, index) {
   const card = document.createElement('article');
   card.className = `paper${paper.featured ? ' featured' : ''}`;
+  if (paper.id) card.id = paper.id;
   card.innerHTML = `
     <div class="paper-left">
       <div class="paper-meta"><span class="paper-venue">${escapeHtml(paper.venue)}</span></div>
@@ -466,6 +505,8 @@ function initResearchDirectionCarousel() {
     kicker.textContent = `Direction ${direction.number} of ${RESEARCH_DIRECTIONS.length}`;
     title.textContent = direction.title;
     summary.textContent = direction.summary;
+    linkPairAlignMentions(title);
+    linkPairAlignMentions(summary);
     track.replaceChildren(
       makeCard(active - 1, 'prev'),
       makeCard(active, 'active'),
@@ -556,3 +597,4 @@ renderPaperCards();
 hydratePdfThumbnails();
 renderMediaCards();
 initResearchDirectionCarousel();
+linkPairAlignMentions(document.body);

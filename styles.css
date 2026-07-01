@@ -1379,3 +1379,16 @@ html[data-theme="dark"] .nav-links.open {
   .direction-lightbox { padding: 10px; }
   .direction-lightbox img { max-width: 98vw; max-height: 82vh; border-radius: 12px; }
 }
+
+.pairalign-jump {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.pairalign-jump:hover,
+.pairalign-jump:focus-visible {
+  color: var(--accent);
+}
