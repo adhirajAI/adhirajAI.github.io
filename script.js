@@ -86,8 +86,8 @@ function getAnchorScrollOffset(target) {
   return header ? header.getBoundingClientRect().height + 24 : 96;
 }
 
-function easeInOutCubic(t) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function linearScrollProgress(t) {
+  return t;
 }
 
 function smoothScrollToTarget(target) {
@@ -104,13 +104,13 @@ function smoothScrollToTarget(target) {
   }
 
   const distance = targetY - startY;
-  const duration = Math.min(900, Math.max(520, Math.abs(distance) * 0.45));
+  const duration = Math.min(420, Math.max(180, Math.abs(distance) * 0.18));
   let startTime = null;
 
   function step(timestamp) {
     if (startTime === null) startTime = timestamp;
     const progress = Math.min((timestamp - startTime) / duration, 1);
-    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+    window.scrollTo(0, startY + distance * linearScrollProgress(progress));
     if (progress < 1) window.requestAnimationFrame(step);
   }
 
