@@ -441,7 +441,7 @@ html[data-theme="dark"] .theme-option.active {
 .direction-stage {
   position: relative;
   margin-top: 26px;
-  min-height: clamp(320px, 48vw, 610px);
+  height: clamp(420px, 62vw, 760px);
   overflow: hidden;
   border-radius: 30px;
   background:
@@ -459,6 +459,7 @@ html[data-theme="dark"] .theme-option.active {
   position: absolute;
   top: 50%;
   width: min(88%, 1060px);
+  aspect-ratio: 1400 / 984;
   border: 0;
   padding: 0;
   margin: 0;
@@ -471,8 +472,8 @@ html[data-theme="dark"] .theme-option.active {
 .direction-card img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
+  height: 100%;
+  aspect-ratio: 1400 / 984;
   object-fit: contain;
   border-radius: 22px;
   background: #ffffff;
@@ -1327,7 +1328,7 @@ html[data-theme="dark"] .nav-links.open {
   .section { padding: 72px 0; }
   .hero-grid, .positioning-grid, .repo-grid, .media-grid, .award-grid, .academic-grid, .service-grid { grid-template-columns: 1fr; }
   .direction-carousel { padding: 20px; border-radius: 26px; }
-  .direction-stage { min-height: clamp(245px, 58vw, 440px); border-radius: 22px; }
+  .direction-stage { height: clamp(310px, 65vw, 560px); border-radius: 22px; }
   .direction-card { width: 90%; }
   .direction-card.is-prev { left: -35%; opacity: 0.24; transform: translate(-50%, -50%) scale(0.78); }
   .direction-card.is-next { left: 135%; opacity: 0.24; transform: translate(-50%, -50%) scale(0.78); }
@@ -1372,7 +1373,7 @@ html[data-theme="dark"] .nav-links.open {
   .paper-copy { gap: 8px; }
   .paper-copy h3 { font-size: 1.06rem; }
   .button { width: 100%; }
-  .direction-stage { min-height: clamp(210px, 62vw, 360px); }
+  .direction-stage { height: clamp(260px, 70vw, 420px); }
   .direction-card { width: 94%; }
   .direction-card img { border-radius: 14px; }
   .direction-summary { font-size: 0.98rem; }

@@ -450,7 +450,7 @@ function initResearchDirectionCarousel() {
     card.type = 'button';
     card.className = `direction-card is-${role}`;
     card.setAttribute('aria-label', role === 'active' ? `Expand ${direction.title}` : direction.title);
-    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="1400" height="789">`;
+    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="1400" height="984">`;
     if (role === 'active') {
       card.addEventListener('click', () => {
         openLightbox(direction);
