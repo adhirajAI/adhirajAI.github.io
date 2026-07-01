@@ -76,16 +76,33 @@ const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();
 
 if (navToggle && navLinks) {
-  navToggle.addEventListener('click', () => {
+  const closeMenu = () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  };
+
+  navToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
     const isOpen = navLinks.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(isOpen));
   });
 
+  navLinks.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+
   navLinks.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-    });
+    link.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!navLinks.classList.contains('open')) return;
+    if (event.target.closest('.nav')) return;
+    closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
   });
 }
 
