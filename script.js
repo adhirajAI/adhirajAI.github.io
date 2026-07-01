@@ -117,7 +117,7 @@ const PAPERS = [
   },
   {
     venue: 'TMLR 2026',
-    : 'CodecSep: Prompt-Driven Universal Sound Separation on Neural Audio Codec Latents',
+    title: 'CodecSep: Prompt-Driven Universal Sound Separation on Neural Audio Codec Latents',
     overview: 'CodecSep studies whether neural audio codec latents can serve as structured operating spaces for downstream audio intelligence. It provides evidence that DAC/NAC latents preserve source-compositional structure and shows that prompt-guided source separation can be performed directly through latent masking. This motivates a codes-in / latent-processing / codes-out pathway, where compressed codec codes are dequantized to latents, processed directly, and requantized to output codes for efficient codec-native audio processing.',
     paperUrl: 'https://tmlr.infinite-conf.org/paper_pages/r63GX9hKhC.html',
     pdfUrl: 'https://arxiv.org/pdf/2509.11717',
@@ -131,43 +131,43 @@ const PAPERS = [
 const MEDIA_ITEMS = [
   {
     type: 'youtube',
-    : 'CodecSep video presentation',
+    title: 'CodecSep video presentation',
     description: 'TMLR-accepted paper video presentation.',
     url: 'https://youtu.be/LUBtTJN3QaI'
   },
   {
     type: 'external',
-    : 'CodecSep TMLR Infinite Conference page',
+    title: 'CodecSep TMLR Infinite Conference page',
     description: 'Conference page with paper, video, and code artifacts.',
     url: 'https://tmlr.infinite-conf.org/paper_pages/r63GX9hKhC.html'
   },
   {
     type: 'external',
-    : 'wav2tok ICLR 2023 poster and video',
+    title: 'wav2tok ICLR 2023 poster and video',
     description: 'SlidesLive poster and video presentation for wav2tok.',
     url: 'https://slideslive.com/38999789'
   },
   {
     type: 'youtube',
-    : 'WISSAP talk: Audio retrieval and representation learning I',
+    title: 'WISSAP talk: Audio retrieval and representation learning I',
     description: 'WISSAP lecture video, playable directly on the website.',
     url: 'https://youtu.be/YWNrfOl2QMI?si=48_RJAsazNZ0VUPD'
   },
   {
     type: 'youtube',
-    : 'WISSAP talk: Audio retrieval and representation learning II',
+    title: 'WISSAP talk: Audio retrieval and representation learning II',
     description: 'WISSAP lecture video, playable directly on the website.',
     url: 'https://youtu.be/GRBThza-ecU?si=7VXXJH7NMTYQHnL3'
   },
   {
     type: 'youtube',
-    : 'WISSAP talk: Audio retrieval and representation learning III',
+    title: 'WISSAP talk: Audio retrieval and representation learning III',
     description: 'WISSAP lecture video, playable directly on the website.',
     url: 'https://youtu.be/xYujD_FS8gI?si=L-9zALvLL_BUtGss'
   },
   {
     type: 'youtube',
-    : 'WISSAP lecture video playlist',
+    title: 'WISSAP lecture video playlist',
     description: 'Lecture playlist on audio retrieval and representation learning.',
     url: 'https://youtube.com/playlist?list=PLbtAaXHMto-vpyPwGJrbpJ9jSb4sEAJo7&si=eOanE1d_qCgtJA-9'
   }
@@ -193,7 +193,7 @@ function createPaperCard(paper, index) {
       </div>
     </div>
     <div class="paper-main">
-      <a class="paper-thumb ${paper.thumbnailUrl ? '' : 'thumb-loading'}" href="${paper.pdfUrl || paper.paperUrl}" target="_blank" rel="noreferrer" aria-label="Open ${escapeHtml(paper.)} PDF preview">
+      <a class="paper-thumb ${paper.thumbnailUrl ? '' : 'thumb-loading'}" href="${paper.pdfUrl || paper.paperUrl}" target="_blank" rel="noreferrer" aria-label="Open ${escapeHtml(paper.title)} PDF preview">
         ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="lazy" decoding="async" />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
       </a>
       <div class="paper-copy">
@@ -343,10 +343,10 @@ const RESEARCH_DIRECTIONS = [
   },
   {
     number: 2,
-    title: 'PairAlign-style autoregressive neural tokenizers',    
+    title: 'PairAlign-style autoregressive neural tokenizers',
     image: 'assets/research-directions/research-direction-2.webp',
     alt: 'Diagram of a PairAlign-style autoregressive neural tokenizer for multimodal foundation models.',
-    summary: 'My work PairAlign treats tokenization as conditional sequence generation: an encoder produces a conditioning representation, and an autoregressive decoder emits compact token streams. The goal is to learn information-preserving symbolic interfaces for efficient reasoning, generation, and adaptation in multimodal foundation models.'
+    summary: 'This direction treats tokenization as conditional sequence generation: an encoder produces a conditioning representation, and an autoregressive decoder emits compact token streams. The goal is to learn information-preserving symbolic interfaces for efficient reasoning, generation, and adaptation in multimodal foundation models.'
   },
   {
     number: 3,
