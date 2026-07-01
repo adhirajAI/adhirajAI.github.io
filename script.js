@@ -111,7 +111,7 @@ const PAPERS = [
     id: 'pairalign-paper',
     venue: 'arXiv 2026 / under review at TMLR',
     title: 'PairAlign: A Framework for Sequence Tokenization via Self-Alignment with Applications to Audio Tokenization',
-    overview: ' PairAlign is an autoregressive neural tokenizer for audio. It formulates tokenization as conditional sequence generation: an encoder maps audio to a continuous condition, and an autoregressive decoder emits a compact symbolic sequence from BOS to EOS, learning token identity, order, length, and termination. I view PairAlign as a symbolic sequence analogue of JEPA-style predictive learning: instead of predicting only continuous latent targets across views, it predicts compact symbolic sequence targets across content-preserving views, using alignment-aware and contrastive objectives to reduce collapse and preserve discriminative structure.',
+    overview: ' PairAlign is an autoregressive neural tokenizer for audio. It formulates tokenization as conditional sequence generation: an encoder maps audio to a continuous condition, and an autoregressive decoder emits a compact symbolic sequence from BOS to EOS, learning token identity, order, length, and termination. PairAlign may be viewd as a symbolic sequence analogue of JEPA-style predictive learning: instead of predicting only continuous latent targets across views, it predicts compact symbolic sequence targets across content-preserving views, using alignment-aware and contrastive objectives to reduce collapse and preserve discriminative structure.',
     paperUrl: 'https://arxiv.org/abs/2605.06582',
     pdfUrl: 'https://arxiv.org/pdf/2605.06582',
     featured: false
