@@ -88,11 +88,16 @@ if (navToggle && navLinks) {
   });
 
   navLinks.addEventListener('click', (event) => {
+    // Allow internal anchor clicks to bubble to initSmoothSectionScroll(),
+    // so menu navigation uses the same fast smooth motion as Back to top.
+    if (event.target.closest('a[href^="#"]')) return;
     event.stopPropagation();
   });
 
   navLinks.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', closeMenu);
+    link.addEventListener('click', () => {
+      if (!link.getAttribute('href')?.startsWith('#')) closeMenu();
+    });
   });
 
   document.addEventListener('click', (event) => {
