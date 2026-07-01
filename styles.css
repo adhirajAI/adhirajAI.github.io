@@ -1857,3 +1857,19 @@ html[data-theme="dark"] .avatar-profile-info a {
   .direction-card.is-far-prev { left: -88%; opacity: 0; transform: translate(-50%, -50%) scale(0.74); }
   .direction-card.is-far-next { left: 188%; opacity: 0; transform: translate(-50%, -50%) scale(0.74); }
 }
+
+/* Carousel side-click navigation: left side = previous, right side = next, center = expand. */
+.direction-card.is-active {
+  cursor: zoom-in;
+}
+
+.direction-card.is-active img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .direction-card.is-active:hover img {
+    filter: saturate(1.02) contrast(1.01);
+  }
+}

@@ -643,8 +643,24 @@ function initResearchDirectionCarousel() {
     card.dataset.directionIndex = String(getIndex(index));
     card.setAttribute('aria-label', role === 'active' ? `Expand ${direction.title}` : direction.title);
     card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="1400" height="789">`;
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (event) => {
       if (!card.classList.contains('is-active')) return;
+
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const leftZone = rect.width * 0.36;
+      const rightZone = rect.width * 0.64;
+
+      if (x < leftZone) {
+        move(-1);
+        return;
+      }
+
+      if (x > rightZone) {
+        move(1);
+        return;
+      }
+
       const activeDirection = RESEARCH_DIRECTIONS[Number(card.dataset.directionIndex)];
       openLightbox(activeDirection);
       pauseAfterInteraction();
