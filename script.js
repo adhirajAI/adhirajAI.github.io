@@ -77,6 +77,74 @@ if (navToggle && navLinks) {
   });
 }
 
+
+function getAnchorScrollOffset(target) {
+  const margin = window.getComputedStyle(target).scrollMarginTop;
+  const parsed = Number.parseFloat(margin);
+  if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  const header = document.querySelector('.site-header, header');
+  return header ? header.getBoundingClientRect().height + 24 : 96;
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function smoothScrollToTarget(target) {
+  if (!target) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const startY = window.pageYOffset;
+  const offset = getAnchorScrollOffset(target);
+  const targetY = Math.max(0, target.getBoundingClientRect().top + startY - offset);
+
+  if (reduceMotion) {
+    window.scrollTo(0, targetY);
+    return;
+  }
+
+  const distance = targetY - startY;
+  const duration = Math.min(900, Math.max(520, Math.abs(distance) * 0.45));
+  let startTime = null;
+
+  function step(timestamp) {
+    if (startTime === null) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+    if (progress < 1) window.requestAnimationFrame(step);
+  }
+
+  window.requestAnimationFrame(step);
+}
+
+function initSmoothSectionScroll() {
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+
+    let target;
+    try {
+      target = document.querySelector(decodeURIComponent(href));
+    } catch (error) {
+      target = null;
+    }
+    if (!target) return;
+
+    event.preventDefault();
+
+    if (navLinks && navToggle) {
+      navLinks.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    smoothScrollToTarget(target);
+    if (history.pushState) history.pushState(null, '', href);
+  });
+}
+
 const PAPERS = [
   {
     id: 'wav2tok-paper',
@@ -617,6 +685,7 @@ function initResearchDirectionCarousel() {
   startAuto();
 }
 
+initSmoothSectionScroll();
 initThemeSelector();
 initAvatarViewer();
 renderPaperCards();
