@@ -594,23 +594,12 @@ function initResearchDirectionCarousel() {
   let active = 0;
   let timer = null;
   let resumeTimer = null;
+  let progressResetTimer = null;
   let isHoverPaused = false;
   let touchStartX = 0;
   let touchStartY = 0;
-  const delay = 5200;
-  const manualPauseMs = 45 * 1000;
-
-  function prefersReducedCarouselMotion() {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }
-
-  function preloadResearchDirectionImages() {
-    RESEARCH_DIRECTIONS.forEach((direction) => {
-      const image = new Image();
-      image.decoding = 'async';
-      image.src = direction.image;
-    });
-  }
+  const delay = 6500;
+  const manualPauseMs = 5 * 60 * 1000;
 
   dots.innerHTML = RESEARCH_DIRECTIONS.map((direction, index) => (
     `<button class="direction-dot" type="button" aria-label="Show research direction ${direction.number}" data-index="${index}"></button>`
@@ -618,9 +607,34 @@ function initResearchDirectionCarousel() {
 
   const dotButtons = Array.from(dots.querySelectorAll('.direction-dot'));
 
+  const autoProgress = document.createElement('div');
+  autoProgress.className = 'direction-auto-progress';
+  autoProgress.setAttribute('aria-hidden', 'true');
+  autoProgress.innerHTML = '<span></span>';
+  carousel.appendChild(autoProgress);
+  const autoProgressBar = autoProgress.querySelector('span');
+
+  function resetAutoProgress() {
+    if (!autoProgressBar) return;
+    if (progressResetTimer) window.clearTimeout(progressResetTimer);
+    autoProgressBar.style.transition = 'none';
+    autoProgressBar.style.width = '0%';
+  }
+
+  function runAutoProgress() {
+    if (!autoProgressBar) return;
+    resetAutoProgress();
+    progressResetTimer = window.setTimeout(() => {
+      autoProgressBar.style.transition = `width ${delay}ms linear`;
+      autoProgressBar.style.width = '100%';
+    }, 30);
+  }
+
   function stopAuto() {
-    if (timer) window.clearInterval(timer);
+    if (timer) window.clearTimeout(timer);
     timer = null;
+    carousel.classList.remove('is-auto-playing');
+    resetAutoProgress();
   }
 
   function clearResume() {
@@ -629,15 +643,25 @@ function initResearchDirectionCarousel() {
   }
 
   function startAuto() {
-    if (isHoverPaused || prefersReducedCarouselMotion()) return;
+    if (isHoverPaused || resumeTimer || !lightbox.hidden) return;
     stopAuto();
-    timer = window.setInterval(() => move(1, false), delay);
+    carousel.classList.add('is-auto-playing');
+    runAutoProgress();
+    timer = window.setTimeout(() => {
+      timer = null;
+      if (isHoverPaused || !lightbox.hidden) {
+        stopAuto();
+        return;
+      }
+      move(1, false);
+      window.setTimeout(() => startAuto(), slideDuration + 90);
+    }, delay);
   }
 
   function pauseAfterInteraction() {
     stopAuto();
-    clearResume();
     carousel.classList.add('is-user-paused');
+    clearResume();
     resumeTimer = window.setTimeout(() => {
       resumeTimer = null;
       carousel.classList.remove('is-user-paused');
@@ -711,6 +735,20 @@ function initResearchDirectionCarousel() {
 
   let isSliding = false;
   const slideDuration = 420;
+  let frameAnimationTimer = null;
+
+  function animateCarouselFrame(directionDelta) {
+    if (!carousel) return;
+    if (frameAnimationTimer) window.clearTimeout(frameAnimationTimer);
+    carousel.classList.remove('is-frame-sliding-left', 'is-frame-sliding-right');
+    // Force reflow so repeated clicks in the same direction restart the frame animation cleanly.
+    void carousel.offsetWidth;
+    carousel.classList.add(directionDelta > 0 ? 'is-frame-sliding-left' : 'is-frame-sliding-right');
+    frameAnimationTimer = window.setTimeout(() => {
+      carousel.classList.remove('is-frame-sliding-left', 'is-frame-sliding-right');
+      frameAnimationTimer = null;
+    }, slideDuration + 80);
+  }
 
   function move(delta, userInitiated = true) {
     const directionDelta = delta === 0 ? 0 : delta > 0 ? 1 : -1;
@@ -718,6 +756,7 @@ function initResearchDirectionCarousel() {
     isSliding = true;
     const nextActive = getIndex(active + directionDelta);
 
+    animateCarouselFrame(directionDelta);
     track.classList.remove('slide-left', 'slide-right');
 
     if (directionDelta > 0) {
@@ -766,6 +805,7 @@ function initResearchDirectionCarousel() {
       lightboxCloseTimer = null;
     }
 
+    stopAuto();
     lightboxImage.src = direction.image;
     lightboxImage.alt = direction.alt;
     lightbox.hidden = false;
@@ -787,6 +827,7 @@ function initResearchDirectionCarousel() {
       lightbox.hidden = true;
       lightboxImage.src = '';
       lightboxCloseTimer = null;
+      if (!resumeTimer && !isHoverPaused) startAuto();
     }, popupTransitionMs);
   }
 
@@ -795,8 +836,21 @@ function initResearchDirectionCarousel() {
 
   dotButtons.forEach((dot) => {
     dot.addEventListener('click', () => {
-      render(Number(dot.dataset.index));
-      pauseAfterInteraction();
+      const targetIndex = Number(dot.dataset.index);
+      const forwardSteps = (targetIndex - active + RESEARCH_DIRECTIONS.length) % RESEARCH_DIRECTIONS.length;
+      const backwardSteps = (active - targetIndex + RESEARCH_DIRECTIONS.length) % RESEARCH_DIRECTIONS.length;
+
+      if (targetIndex === active) {
+        pauseAfterInteraction();
+        return;
+      }
+
+      if (forwardSteps === 1) move(1);
+      else if (backwardSteps === 1) move(-1);
+      else {
+        render(targetIndex);
+        pauseAfterInteraction();
+      }
     });
   });
 

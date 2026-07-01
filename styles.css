@@ -468,9 +468,123 @@ html[data-theme="dark"] .theme-option.active {
   background: linear-gradient(180deg, #ffffff, #f8fbff);
   border: 1px solid var(--line);
   border-radius: 34px;
-  padding: 28px;
+  padding: 28px 28px 34px;
   box-shadow: var(--shadow);
 }
+.direction-carousel {
+  position: relative;
+}
+
+
+.direction-carousel,
+.direction-stage,
+.direction-kicker,
+.direction-title,
+.direction-summary,
+.direction-controls,
+.direction-auto-progress {
+  transition:
+    transform 420ms linear,
+    opacity 220ms linear,
+    box-shadow 420ms linear,
+    border-color 420ms linear,
+    background-position 420ms linear;
+}
+
+.direction-carousel.is-frame-sliding-left,
+.direction-carousel.is-frame-sliding-right {
+  will-change: transform, box-shadow, border-color;
+}
+
+.direction-carousel.is-frame-sliding-left {
+  animation: carouselFrameSlideLeft 420ms linear both;
+}
+
+.direction-carousel.is-frame-sliding-right {
+  animation: carouselFrameSlideRight 420ms linear both;
+}
+
+.direction-carousel.is-frame-sliding-left .direction-stage,
+.direction-carousel.is-frame-sliding-left .direction-controls,
+.direction-carousel.is-frame-sliding-left .direction-auto-progress {
+  animation: carouselInnerSlideLeft 420ms linear both;
+}
+
+.direction-carousel.is-frame-sliding-right .direction-stage,
+.direction-carousel.is-frame-sliding-right .direction-controls,
+.direction-carousel.is-frame-sliding-right .direction-auto-progress {
+  animation: carouselInnerSlideRight 420ms linear both;
+}
+
+.direction-carousel.is-frame-sliding-left .direction-kicker,
+.direction-carousel.is-frame-sliding-left .direction-title,
+.direction-carousel.is-frame-sliding-left .direction-summary {
+  animation: carouselCopySlideLeft 420ms linear both;
+}
+
+.direction-carousel.is-frame-sliding-right .direction-kicker,
+.direction-carousel.is-frame-sliding-right .direction-title,
+.direction-carousel.is-frame-sliding-right .direction-summary {
+  animation: carouselCopySlideRight 420ms linear both;
+}
+
+@keyframes carouselFrameSlideLeft {
+  0% { transform: translateX(0); }
+  32% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes carouselFrameSlideRight {
+  0% { transform: translateX(0); }
+  32% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes carouselInnerSlideLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-3px); }
+}
+
+@keyframes carouselInnerSlideRight {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(3px); }
+}
+
+@keyframes carouselCopySlideLeft {
+  0% { opacity: 0.72; transform: translateX(10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes carouselCopySlideRight {
+  0% { opacity: 0.72; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.direction-auto-progress {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 18px;
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--line) 70%, transparent);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.direction-auto-progress span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyber-cyan), var(--cyber-magenta));
+}
+
+.direction-carousel.is-user-paused .direction-auto-progress {
+  opacity: 0.28;
+}
+
 .direction-kicker {
   display: inline-flex;
   align-items: center;
@@ -1837,6 +1951,10 @@ html[data-theme="dark"] .avatar-profile-info a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .direction-carousel,
+  .direction-stage,
+  .direction-controls,
+  .direction-auto-progress,
   .direction-card,
   .direction-title,
   .direction-summary,
@@ -1849,6 +1967,7 @@ html[data-theme="dark"] .avatar-profile-info a {
   .direction-lightbox-close {
     transition: none;
     transform: none;
+    animation: none;
   }
 }
 
@@ -1871,5 +1990,14 @@ html[data-theme="dark"] .avatar-profile-info a {
 @media (hover: hover) and (pointer: fine) {
   .direction-card.is-active:hover img {
     filter: saturate(1.02) contrast(1.01);
+  }
+}
+
+
+@media (max-width: 560px) {
+  .direction-auto-progress {
+    left: 20px;
+    right: 20px;
+    bottom: 14px;
   }
 }
