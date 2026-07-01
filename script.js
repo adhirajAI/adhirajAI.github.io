@@ -220,7 +220,6 @@ function linkPairAlignMentions(root = document.body) {
 function createPaperCard(paper, index) {
   const card = document.createElement('article');
   card.className = `paper${paper.featured ? ' featured' : ''}`;
-  if (paper.id) card.id = paper.id;
   card.innerHTML = `
     <div class="paper-left">
       <div class="paper-meta"><span class="paper-venue">${escapeHtml(paper.venue)}</span></div>
@@ -236,7 +235,7 @@ function createPaperCard(paper, index) {
         ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="lazy" decoding="async" />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
       </a>
       <div class="paper-copy">
-        <h3>${escapeHtml(paper.title)}</h3>
+        <h3${paper.id ? ` id="${escapeHtml(paper.id)}"` : ''}>${escapeHtml(paper.title)}</h3>
         <p>${escapeHtml(paper.overview)}</p>
       </div>
     </div>

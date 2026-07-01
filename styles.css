@@ -1380,6 +1380,16 @@ html[data-theme="dark"] .nav-links.open {
   .direction-lightbox img { max-width: 98vw; max-height: 82vh; border-radius: 12px; }
 }
 
+#pairalign-paper {
+  scroll-margin-top: 120px;
+}
+
+@media (max-width: 768px) {
+  #pairalign-paper {
+    scroll-margin-top: 92px;
+  }
+}
+
 .pairalign-jump {
   color: inherit;
   font-weight: inherit;
