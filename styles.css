@@ -559,6 +559,35 @@ html[data-theme="dark"] .theme-option.active {
   filter: saturate(0.75) blur(0.15px);
   pointer-events: none;
 }
+
+.direction-card.is-far-prev {
+  left: -44%;
+  z-index: 0;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.72);
+  filter: saturate(0.72) blur(0.2px);
+  pointer-events: none;
+}
+
+.direction-card.is-far-next {
+  left: 144%;
+  z-index: 0;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.72);
+  filter: saturate(0.72) blur(0.2px);
+  pointer-events: none;
+}
+
+.direction-track.slide-left .direction-card,
+.direction-track.slide-right .direction-card {
+  will-change: left, transform, opacity, filter;
+}
+
+.direction-copy-changing .direction-title,
+.direction-copy-changing .direction-summary,
+.direction-copy-changing .direction-kicker {
+  transition: opacity 180ms linear, transform 180ms linear;
+}
 .direction-card:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 5px;
@@ -1748,72 +1777,17 @@ html[data-theme="dark"] .avatar-profile-info a {
   }
 }
 
-
-/* Smooth pop-up transitions for avatar profile and research-direction lightbox. */
-.avatar-modal,
-.direction-lightbox {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity 220ms linear,
-    visibility 220ms linear;
-}
-
-.avatar-modal.is-open,
-.direction-lightbox.is-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.avatar-modal-frame {
-  opacity: 0;
-  transform: translateY(10px) scale(0.965);
-  transition:
-    opacity 180ms linear,
-    transform 220ms linear;
-  will-change: opacity, transform;
-}
-
-.avatar-modal.is-open .avatar-modal-frame {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.direction-lightbox img {
-  opacity: 0;
-  transform: translateY(10px) scale(0.965);
-  transition:
-    opacity 180ms linear,
-    transform 220ms linear;
-  will-change: opacity, transform;
-}
-
-.direction-lightbox.is-open img {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.direction-lightbox p,
-.direction-lightbox-close {
-  opacity: 0;
-  transition: opacity 180ms linear;
-}
-
-.direction-lightbox.is-open p,
-.direction-lightbox.is-open .direction-lightbox-close {
-  opacity: 1;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .avatar-modal,
-  .avatar-modal-frame,
-  .direction-lightbox,
-  .direction-lightbox img,
-  .direction-lightbox p,
-  .direction-lightbox-close {
+  .direction-card,
+  .direction-title,
+  .direction-summary,
+  .direction-kicker {
     transition: none;
-    transform: none;
   }
+}
+
+
+@media (max-width: 860px) {
+  .direction-card.is-far-prev { left: -88%; opacity: 0; transform: translate(-50%, -50%) scale(0.74); }
+  .direction-card.is-far-next { left: 188%; opacity: 0; transform: translate(-50%, -50%) scale(0.74); }
 }

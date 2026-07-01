@@ -50,42 +50,18 @@ function initAvatarViewer() {
   const button = document.querySelector('.avatar-button');
   const modal = document.querySelector('#avatar-modal');
   if (!button || !modal) return;
-
-  const popupTransitionMs = 220;
-  let closeTimer = null;
-
   function openAvatar() {
-    if (closeTimer) {
-      window.clearTimeout(closeTimer);
-      closeTimer = null;
-    }
-
     const modalImage = modal.querySelector('img[data-src]');
     if (modalImage && !modalImage.getAttribute('src')) {
       modalImage.setAttribute('src', modalImage.dataset.src);
     }
-
     modal.hidden = false;
     document.body.classList.add('avatar-expanded');
-
-    window.requestAnimationFrame(() => {
-      modal.classList.add('is-open');
-    });
   }
-
   function closeAvatar() {
-    if (modal.hidden) return;
-
-    modal.classList.remove('is-open');
+    modal.hidden = true;
     document.body.classList.remove('avatar-expanded');
-
-    if (closeTimer) window.clearTimeout(closeTimer);
-    closeTimer = window.setTimeout(() => {
-      modal.hidden = true;
-      closeTimer = null;
-    }, popupTransitionMs);
   }
-
   button.addEventListener('click', openAvatar);
   modal.addEventListener('click', closeAvatar);
   document.addEventListener('keydown', (event) => {
@@ -640,72 +616,104 @@ function initResearchDirectionCarousel() {
     const card = document.createElement('button');
     card.type = 'button';
     card.className = `direction-card is-${role}`;
+    card.dataset.directionIndex = String(getIndex(index));
     card.setAttribute('aria-label', role === 'active' ? `Expand ${direction.title}` : direction.title);
     card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="1400" height="789">`;
-    if (role === 'active') {
-      card.addEventListener('click', () => {
-        openLightbox(direction);
-        pauseAfterInteraction();
-      });
-    }
+    card.addEventListener('click', () => {
+      if (!card.classList.contains('is-active')) return;
+      const activeDirection = RESEARCH_DIRECTIONS[Number(card.dataset.directionIndex)];
+      openLightbox(activeDirection);
+      pauseAfterInteraction();
+    });
     return card;
   }
 
-  function render(index) {
-    active = getIndex(index);
-    const direction = RESEARCH_DIRECTIONS[active];
+  function updateDirectionText(index, animate = false) {
+    const direction = RESEARCH_DIRECTIONS[getIndex(index)];
+    if (animate) {
+      carousel.classList.add('direction-copy-changing');
+      window.setTimeout(() => carousel.classList.remove('direction-copy-changing'), 180);
+    }
     kicker.textContent = `Direction ${direction.number} of ${RESEARCH_DIRECTIONS.length}`;
     title.textContent = direction.title;
     summary.textContent = direction.summary;
     linkPaperMentions(title);
     linkPaperMentions(summary);
+    dotButtons.forEach((dot, dotIndex) => {
+      dot.classList.toggle('active', dotIndex === getIndex(index));
+      dot.setAttribute('aria-current', dotIndex === getIndex(index) ? 'true' : 'false');
+    });
+  }
+
+  function render(index) {
+    active = getIndex(index);
+    updateDirectionText(active);
     track.replaceChildren(
       makeCard(active - 1, 'prev'),
       makeCard(active, 'active'),
       makeCard(active + 1, 'next')
     );
-    dotButtons.forEach((dot, dotIndex) => {
-      dot.classList.toggle('active', dotIndex === active);
-      dot.setAttribute('aria-current', dotIndex === active ? 'true' : 'false');
-    });
   }
 
+  let isSliding = false;
+  const slideDuration = 420;
+
   function move(delta, userInitiated = true) {
-    render(active + delta);
+    const directionDelta = delta === 0 ? 0 : delta > 0 ? 1 : -1;
+    if (!directionDelta || isSliding) return;
+    isSliding = true;
+    const nextActive = getIndex(active + directionDelta);
+
+    track.classList.remove('slide-left', 'slide-right');
+
+    if (directionDelta > 0) {
+      track.replaceChildren(
+        makeCard(active, 'active'),
+        makeCard(active + 1, 'next'),
+        makeCard(active + 2, 'far-next')
+      );
+      window.requestAnimationFrame(() => {
+        track.classList.add('slide-left');
+        track.children[0]?.classList.replace('is-active', 'is-prev');
+        track.children[1]?.classList.replace('is-next', 'is-active');
+        track.children[2]?.classList.replace('is-far-next', 'is-next');
+      });
+    } else {
+      track.replaceChildren(
+        makeCard(active - 2, 'far-prev'),
+        makeCard(active - 1, 'prev'),
+        makeCard(active, 'active')
+      );
+      window.requestAnimationFrame(() => {
+        track.classList.add('slide-right');
+        track.children[0]?.classList.replace('is-far-prev', 'is-prev');
+        track.children[1]?.classList.replace('is-prev', 'is-active');
+        track.children[2]?.classList.replace('is-active', 'is-next');
+      });
+    }
+
+    active = nextActive;
+    updateDirectionText(active, true);
+    window.setTimeout(() => {
+      render(active);
+      track.classList.remove('slide-left', 'slide-right');
+      isSliding = false;
+    }, slideDuration + 30);
+
     if (userInitiated) pauseAfterInteraction();
   }
 
-  const lightboxTransitionMs = 220;
-  let lightboxCloseTimer = null;
-
   function openLightbox(direction) {
-    if (lightboxCloseTimer) {
-      window.clearTimeout(lightboxCloseTimer);
-      lightboxCloseTimer = null;
-    }
-
     lightboxImage.src = direction.image;
     lightboxImage.alt = direction.alt;
     lightbox.hidden = false;
     document.body.classList.add('direction-expanded');
-
-    window.requestAnimationFrame(() => {
-      lightbox.classList.add('is-open');
-    });
   }
 
   function closeLightbox() {
-    if (lightbox.hidden) return;
-
-    lightbox.classList.remove('is-open');
+    lightbox.hidden = true;
+    lightboxImage.src = '';
     document.body.classList.remove('direction-expanded');
-
-    if (lightboxCloseTimer) window.clearTimeout(lightboxCloseTimer);
-    lightboxCloseTimer = window.setTimeout(() => {
-      lightbox.hidden = true;
-      lightboxImage.src = '';
-      lightboxCloseTimer = null;
-    }, lightboxTransitionMs);
   }
 
   prev.addEventListener('click', () => move(-1));
