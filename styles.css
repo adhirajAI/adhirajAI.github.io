@@ -1777,12 +1777,78 @@ html[data-theme="dark"] .avatar-profile-info a {
   }
 }
 
+
+
+/* Smooth pop-up transitions for avatar profile and research-direction lightbox. */
+.avatar-modal,
+.direction-lightbox {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 220ms linear,
+    visibility 220ms linear;
+}
+
+.avatar-modal.is-open,
+.direction-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.avatar-modal-frame {
+  opacity: 0;
+  transform: translateY(10px) scale(0.965);
+  transition:
+    opacity 180ms linear,
+    transform 220ms linear;
+  will-change: opacity, transform;
+}
+
+.avatar-modal.is-open .avatar-modal-frame {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.direction-lightbox img {
+  opacity: 0;
+  transform: translateY(10px) scale(0.965);
+  transition:
+    opacity 180ms linear,
+    transform 220ms linear;
+  will-change: opacity, transform;
+}
+
+.direction-lightbox.is-open img {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.direction-lightbox p,
+.direction-lightbox-close {
+  opacity: 0;
+  transition: opacity 180ms linear;
+}
+
+.direction-lightbox.is-open p,
+.direction-lightbox.is-open .direction-lightbox-close {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .direction-card,
   .direction-title,
   .direction-summary,
-  .direction-kicker {
+  .direction-kicker,
+  .avatar-modal,
+  .avatar-modal-frame,
+  .direction-lightbox,
+  .direction-lightbox img,
+  .direction-lightbox p,
+  .direction-lightbox-close {
     transition: none;
+    transform: none;
   }
 }
 
