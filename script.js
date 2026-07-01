@@ -34,8 +34,8 @@ function initThemeSelector() {
 
 
 const AVATAR_PRELOAD_SOURCES = [
-  'https://github.com/adhirajAI.png?size=88',
-  'https://github.com/adhirajAI.png?size=640'
+  'https://github.com/adhiraj69.png?size=88',
+  'https://github.com/adhiraj69.png?size=640'
 ];
 
 function preloadAvatarImages() {
