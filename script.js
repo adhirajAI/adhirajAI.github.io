@@ -604,12 +604,42 @@ function initResearchDirectionCarousel() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
+  const imageAspectRatios = new Map();
+
   function preloadResearchDirectionImages() {
-    RESEARCH_DIRECTIONS.forEach((direction) => {
+    RESEARCH_DIRECTIONS.forEach((direction, index) => {
       const image = new Image();
       image.decoding = 'async';
+      image.onload = () => {
+        if (image.naturalWidth && image.naturalHeight) {
+          imageAspectRatios.set(index, image.naturalHeight / image.naturalWidth);
+          if (index === active) syncStageHeight(active, false);
+        }
+      };
       image.src = direction.image;
     });
+  }
+
+  function getDirectionAspectRatio(index) {
+    return imageAspectRatios.get(getIndex(index)) || (789 / 1400);
+  }
+
+  function getActiveCardWidth() {
+    const stageWidth = stage.getBoundingClientRect().width || carousel.getBoundingClientRect().width || window.innerWidth;
+    return Math.min(stageWidth * 0.88, 1060);
+  }
+
+  function syncStageHeight(index = active, animate = true) {
+    const ratio = getDirectionAspectRatio(index);
+    const cardWidth = getActiveCardWidth();
+    const verticalBreathingRoom = window.matchMedia('(max-width: 560px)').matches ? 24 : 44;
+    const minHeight = window.matchMedia('(max-width: 560px)').matches ? 210 : window.matchMedia('(max-width: 860px)').matches ? 245 : 320;
+    const nextHeight = Math.max(minHeight, Math.ceil(cardWidth * ratio + verticalBreathingRoom));
+    stage.classList.toggle('is-resizing', animate);
+    stage.style.height = `${nextHeight}px`;
+    if (animate) {
+      window.setTimeout(() => stage.classList.remove('is-resizing'), slideDuration + 80);
+    }
   }
 
   dots.innerHTML = RESEARCH_DIRECTIONS.map((direction, index) => (
@@ -656,7 +686,7 @@ function initResearchDirectionCarousel() {
     card.className = `direction-card is-${role}`;
     card.dataset.directionIndex = String(getIndex(index));
     card.setAttribute('aria-label', role === 'active' ? `Expand ${direction.title}` : direction.title);
-    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="1400" height="789">`;
+    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" >`;
     card.addEventListener('click', (event) => {
       if (!card.classList.contains('is-active')) return;
 
@@ -682,26 +712,40 @@ function initResearchDirectionCarousel() {
     return card;
   }
 
-  function updateDirectionText(index, animate = false) {
-    const direction = RESEARCH_DIRECTIONS[getIndex(index)];
-    if (animate) {
-      carousel.classList.add('direction-copy-changing');
-      window.setTimeout(() => carousel.classList.remove('direction-copy-changing'), 180);
-    }
+  function setDirectionCopy(direction) {
     kicker.textContent = `Direction ${direction.number} of ${RESEARCH_DIRECTIONS.length}`;
     title.textContent = direction.title;
     summary.textContent = direction.summary;
     linkPaperMentions(title);
     linkPaperMentions(summary);
+  }
+
+  function updateDirectionText(index, animate = false) {
+    const direction = RESEARCH_DIRECTIONS[getIndex(index)];
     dotButtons.forEach((dot, dotIndex) => {
       dot.classList.toggle('active', dotIndex === getIndex(index));
       dot.setAttribute('aria-current', dotIndex === getIndex(index) ? 'true' : 'false');
     });
+
+    if (!animate || prefersReducedCarouselMotion()) {
+      carousel.classList.remove('direction-copy-changing');
+      setDirectionCopy(direction);
+      return;
+    }
+
+    carousel.classList.add('direction-copy-changing');
+    window.setTimeout(() => {
+      setDirectionCopy(direction);
+      window.requestAnimationFrame(() => {
+        carousel.classList.remove('direction-copy-changing');
+      });
+    }, 160);
   }
 
   function render(index) {
     active = getIndex(index);
     updateDirectionText(active);
+    syncStageHeight(active, false);
     track.replaceChildren(
       makeCard(active - 1, 'prev'),
       makeCard(active, 'active'),
@@ -710,7 +754,7 @@ function initResearchDirectionCarousel() {
   }
 
   let isSliding = false;
-  const slideDuration = 420;
+  const slideDuration = 560;
 
   function move(delta, userInitiated = true) {
     const directionDelta = delta === 0 ? 0 : delta > 0 ? 1 : -1;
@@ -722,31 +766,36 @@ function initResearchDirectionCarousel() {
 
     if (directionDelta > 0) {
       track.replaceChildren(
+        makeCard(active - 1, 'prev'),
         makeCard(active, 'active'),
         makeCard(active + 1, 'next'),
         makeCard(active + 2, 'far-next')
       );
       window.requestAnimationFrame(() => {
         track.classList.add('slide-left');
-        track.children[0]?.classList.replace('is-active', 'is-prev');
-        track.children[1]?.classList.replace('is-next', 'is-active');
-        track.children[2]?.classList.replace('is-far-next', 'is-next');
+        track.children[0]?.classList.replace('is-prev', 'is-far-prev');
+        track.children[1]?.classList.replace('is-active', 'is-prev');
+        track.children[2]?.classList.replace('is-next', 'is-active');
+        track.children[3]?.classList.replace('is-far-next', 'is-next');
       });
     } else {
       track.replaceChildren(
         makeCard(active - 2, 'far-prev'),
         makeCard(active - 1, 'prev'),
-        makeCard(active, 'active')
+        makeCard(active, 'active'),
+        makeCard(active + 1, 'next')
       );
       window.requestAnimationFrame(() => {
         track.classList.add('slide-right');
         track.children[0]?.classList.replace('is-far-prev', 'is-prev');
         track.children[1]?.classList.replace('is-prev', 'is-active');
         track.children[2]?.classList.replace('is-active', 'is-next');
+        track.children[3]?.classList.replace('is-next', 'is-far-next');
       });
     }
 
     active = nextActive;
+    syncStageHeight(active, true);
     updateDirectionText(active, true);
     window.setTimeout(() => {
       render(active);
@@ -795,8 +844,15 @@ function initResearchDirectionCarousel() {
 
   dotButtons.forEach((dot) => {
     dot.addEventListener('click', () => {
-      render(Number(dot.dataset.index));
-      pauseAfterInteraction();
+      const targetIndex = Number(dot.dataset.index);
+      if (targetIndex === active) {
+        pauseAfterInteraction();
+        return;
+      }
+      const forwardDistance = (targetIndex - active + RESEARCH_DIRECTIONS.length) % RESEARCH_DIRECTIONS.length;
+      const backwardDistance = (active - targetIndex + RESEARCH_DIRECTIONS.length) % RESEARCH_DIRECTIONS.length;
+      if (forwardDistance <= backwardDistance) move(1);
+      else move(-1);
     });
   });
 
@@ -841,7 +897,14 @@ function initResearchDirectionCarousel() {
     if (event.key === 'ArrowRight' && document.activeElement && carousel.contains(document.activeElement)) move(1);
   });
 
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => syncStageHeight(active, true), 80);
+  });
+
   render(0);
+  preloadResearchDirectionImages();
   startAuto();
 }
 

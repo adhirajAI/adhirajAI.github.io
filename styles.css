@@ -498,7 +498,8 @@ html[data-theme="dark"] .theme-option.active {
 .direction-stage {
   position: relative;
   margin-top: 26px;
-  min-height: clamp(320px, 48vw, 610px);
+  height: clamp(320px, 48vw, 610px);
+  min-height: 0;
   overflow: hidden;
   border-radius: 30px;
   background:
@@ -506,6 +507,11 @@ html[data-theme="dark"] .theme-option.active {
     #ffffff;
   border: 1px solid var(--line);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 18px 42px rgba(16, 24, 39, 0.08);
+  transition: height 520ms linear;
+}
+
+.direction-stage.is-resizing {
+  will-change: height;
 }
 .direction-track {
   position: absolute;
@@ -524,25 +530,25 @@ html[data-theme="dark"] .theme-option.active {
   border-radius: 24px;
   transform: translate(-50%, -50%) scale(0.82);
   transition:
-    left 420ms linear,
-    transform 420ms linear,
-    opacity 420ms linear,
-    filter 420ms linear;
+    left 560ms linear,
+    transform 560ms linear,
+    opacity 560ms linear,
+    filter 560ms linear;
 }
 .direction-card img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
   object-fit: contain;
   border-radius: 22px;
   background: #ffffff;
   border: 1px solid var(--line);
   box-shadow: 0 18px 44px rgba(16, 24, 39, 0.12);
   transition:
-    border-radius 420ms linear,
-    box-shadow 420ms linear,
-    filter 420ms linear;
+    border-radius 560ms linear,
+    box-shadow 560ms linear,
+    filter 560ms linear,
+    opacity 560ms linear;
 }
 .direction-card.is-active {
   left: 50%;
@@ -591,11 +597,30 @@ html[data-theme="dark"] .theme-option.active {
   will-change: left, transform, opacity, filter;
 }
 
+.direction-title,
+.direction-summary,
+.direction-kicker {
+  transition: opacity 320ms linear, transform 320ms linear;
+}
+
 .direction-copy-changing .direction-title,
 .direction-copy-changing .direction-summary,
 .direction-copy-changing .direction-kicker {
-  transition: opacity 180ms linear, transform 180ms linear;
+  opacity: 0;
+  transform: translateY(6px);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .direction-stage,
+  .direction-card,
+  .direction-card img,
+  .direction-title,
+  .direction-summary,
+  .direction-kicker {
+    transition: none;
+  }
+}
+
 .direction-card:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 5px;
@@ -1445,7 +1470,7 @@ html[data-theme="dark"] .nav-links.open {
   .section { padding: 72px 0; }
   .hero-grid, .positioning-grid, .repo-grid, .project-grid, .competition-grid, .media-grid, .award-grid, .academic-grid, .service-grid { grid-template-columns: 1fr; }
   .direction-carousel { padding: 20px; border-radius: 26px; }
-  .direction-stage { min-height: clamp(245px, 58vw, 440px); border-radius: 22px; }
+  .direction-stage { height: clamp(245px, 58vw, 440px); border-radius: 22px; }
   .direction-card { width: 90%; }
   .direction-card.is-prev { left: -35%; opacity: 0.24; transform: translate(-50%, -50%) scale(0.78); }
   .direction-card.is-next { left: 135%; opacity: 0.24; transform: translate(-50%, -50%) scale(0.78); }
@@ -1490,7 +1515,7 @@ html[data-theme="dark"] .nav-links.open {
   .paper-copy { gap: 8px; }
   .paper-copy h3 { font-size: 1.06rem; }
   .button { width: 100%; }
-  .direction-stage { min-height: clamp(210px, 62vw, 360px); }
+  .direction-stage { height: clamp(210px, 62vw, 360px); }
   .direction-card { width: 94%; }
   .direction-card img { border-radius: 14px; }
   .direction-summary { font-size: 0.98rem; }
