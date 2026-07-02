@@ -385,7 +385,7 @@ function createPaperCard(paper, index) {
     </div>
     <div class="paper-main">
       <a class="paper-thumb ${paper.thumbnailUrl ? '' : 'thumb-loading'}" href="${paper.pdfUrl || paper.paperUrl}" target="_blank" rel="noreferrer" aria-label="Open ${escapeHtml(paper.title)} PDF preview">
-        ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="lazy" decoding="async" />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
+        ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="eager" decoding="async" fetchpriority="low" />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
       </a>
       <div class="paper-copy">
         <h3${paper.id ? ` id="${escapeHtml(paper.id)}"` : ''}>${escapeHtml(paper.title)}</h3>
@@ -451,7 +451,7 @@ function hydratePdfThumbnails() {
             obs.unobserve(entry.target);
           }
         });
-      }, { rootMargin: '250px 0px' })
+      }, { rootMargin: '900px 0px' })
     : null;
 
   thumbs.forEach((thumb) => {
@@ -946,9 +946,9 @@ initThemeSelector();
 preloadAvatarImages();
 initAvatarViewer();
 renderPaperCards();
+hydratePdfThumbnails();
 initResearchDirectionCarousel();
 linkPaperMentions(document.body);
 runWhenBrowserIsIdle(() => {
-  hydratePdfThumbnails();
   renderMediaCards();
 });

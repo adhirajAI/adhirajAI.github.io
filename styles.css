@@ -1589,13 +1589,6 @@ html[data-theme="dark"] .nav-links.open {
   .competition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 860px) {
-  .competition-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
 /* Unified compact navigation: single Menu button + theme selector */
 .nav {
   position: relative;
@@ -1939,5 +1932,13 @@ html[data-theme="dark"] .avatar-profile-info a {
 @media (hover: hover) and (pointer: fine) {
   .direction-card.is-active:hover img {
     filter: saturate(1.02) contrast(1.01);
+  }
+}
+
+/* Mobile competitions: stack one challenge after another.
+   This intentionally comes after the <=1100px two-column rule. */
+@media (max-width: 860px) {
+  .competition-grid {
+    grid-template-columns: 1fr;
   }
 }
