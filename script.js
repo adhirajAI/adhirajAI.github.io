@@ -599,8 +599,8 @@ function initResearchDirectionCarousel() {
   let touchStartY = 0;
   const delay = 5200;
   const manualPauseMs = 45 * 1000;
-  const slideDuration = 380;
-  const copySwapDelay = 85;
+  const slideDuration = 340;
+  const copySwapDelay = 55;
 
   function prefersReducedCarouselMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -699,7 +699,9 @@ function initResearchDirectionCarousel() {
     card.className = `direction-card is-${role}`;
     card.dataset.directionIndex = String(getIndex(index));
     card.setAttribute('aria-label', role === 'active' ? `Expand ${direction.title}` : direction.title);
-    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" >`;
+    const width = 1400;
+    const height = Math.round(width * getDirectionAspectRatio(index));
+    card.innerHTML = `<img src="${direction.image}" alt="${direction.alt}" loading="${role === 'active' ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${role === 'active' ? 'high' : 'low'}" width="${width}" height="${height}">`;
     card.addEventListener('click', (event) => {
       if (!card.classList.contains('is-active')) return;
 
@@ -917,15 +919,26 @@ function initResearchDirectionCarousel() {
     if (event.key === 'ArrowRight' && document.activeElement && carousel.contains(document.activeElement)) move(1);
   });
 
-  let resizeTimer = null;
+  let resizeFrame = null;
   window.addEventListener('resize', () => {
-    if (resizeTimer) window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => syncStageHeight(active, true), 80);
-  });
+    if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => {
+      resizeFrame = null;
+      syncStageHeight(active, true);
+    });
+  }, { passive: true });
 
-  render(0);
   preloadResearchDirectionImages();
+  render(0);
   startAuto();
+}
+
+function runWhenBrowserIsIdle(task) {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(task, { timeout: 1200 });
+    return;
+  }
+  window.setTimeout(task, 120);
 }
 
 initSmoothSectionScroll();
@@ -933,7 +946,9 @@ initThemeSelector();
 preloadAvatarImages();
 initAvatarViewer();
 renderPaperCards();
-hydratePdfThumbnails();
-renderMediaCards();
 initResearchDirectionCarousel();
 linkPaperMentions(document.body);
+runWhenBrowserIsIdle(() => {
+  hydratePdfThumbnails();
+  renderMediaCards();
+});
