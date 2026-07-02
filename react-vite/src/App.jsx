@@ -16,6 +16,7 @@ const PAPERS = [
     overview: 'Extends wav2tok by making pairwise token alignment more explicit and scalable through cross-view symbolic prediction, CTC-style alignment, and DTW-guided frame-aligned prediction of paired-view token targets.',
     paperUrl: 'https://arxiv.org/abs/2606.26824',
     pdfUrl: 'https://arxiv.org/pdf/2606.26824',
+    thumbnailUrl: 'assets/thumbnails/wav2tok2.webp',
     codeUrl: 'https://github.com/adhiraj69/wav2tok2'
   },
   {
@@ -32,7 +33,8 @@ const PAPERS = [
     title: 'PairAlign: A Framework for Sequence Tokenization via Self-Alignment with Applications to Audio Tokenization',
     overview: 'An autoregressive neural tokenizer that treats tokenization as conditional sequence generation and learns token identity, order, length, and termination using alignment-aware and contrastive objectives to preserve discriminative structure.',
     paperUrl: 'https://arxiv.org/abs/2605.06582',
-    pdfUrl: 'https://arxiv.org/pdf/2605.06582'
+    pdfUrl: 'https://arxiv.org/pdf/2605.06582',
+    thumbnailUrl: 'assets/thumbnails/PairAlign.webp'
   },
   {
     venue: 'TMLR 2026',

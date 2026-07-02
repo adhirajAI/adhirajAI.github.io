@@ -1942,3 +1942,21 @@ html[data-theme="dark"] .avatar-profile-info a {
     grid-template-columns: 1fr;
   }
 }
+
+.external-person-link {
+  color: var(--accent);
+  font-weight: 850;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.external-person-link:hover,
+.external-person-link:focus-visible {
+  color: var(--accent-dark);
+}
+
+.paper-thumb img {
+  content-visibility: auto;
+}
+

@@ -212,6 +212,8 @@ const PAPERS = [
     paperUrl: 'https://openreview.net/forum?id=v8Mi8KU6056',
     pdfUrl: 'https://openreview.net/pdf?id=v8Mi8KU6056',
     thumbnailUrl: 'assets/thumbnails/wav2tokPNG.webp',
+    thumbnailWidth: 640,
+    thumbnailHeight: 834,
     codeUrl: 'https://github.com/madhavlab/wav2tok',
     featured: false
   },
@@ -222,6 +224,9 @@ const PAPERS = [
     overview: 'wav2tok 2.0 is a neural audio tokenizer for efficient retrieval. It extends the original wav2tok line by making pairwise token alignment more explicit and scalable. It learns discrete audio token sequences through cross-view symbolic prediction, retaining a CTC-style alignment objective while adding DTW-guided frame-aligned prediction of paired-view token targets. This strengthens the sequence-target predictive learning view: paired views of the same content are trained to predict each other’s token strings, making the learned tokenizer more retrieval-oriented and alignment-aware.',
     paperUrl: 'https://arxiv.org/abs/2606.26824',
     pdfUrl: 'https://arxiv.org/pdf/2606.26824',
+    thumbnailUrl: 'assets/thumbnails/wav2tok2.webp',
+    thumbnailWidth: 720,
+    thumbnailHeight: 1013,
     codeUrl: 'https://github.com/adhiraj69/wav2tok2',
     featured: false
   },
@@ -233,6 +238,8 @@ const PAPERS = [
     paperUrl: 'https://www.isca-archive.org/interspeech_2023/banerjee23_interspeech.html',
     pdfUrl: 'https://www.isca-archive.org/interspeech_2023/banerjee23_interspeech.pdf',
     thumbnailUrl: 'assets/thumbnails/EncDecAWE.webp',
+    thumbnailWidth: 640,
+    thumbnailHeight: 911,
     codeUrl: 'https://github.com/madhavlab/2023_adhiraj_encdecPairwisePred',
     featured: false
   },
@@ -243,6 +250,9 @@ const PAPERS = [
     overview: ' PairAlign is an autoregressive neural tokenizer for audio. It formulates tokenization as conditional sequence generation: an encoder maps audio to a continuous condition, and an autoregressive decoder emits a compact symbolic sequence from BOS to EOS, learning token identity, order, length, and termination. PairAlign may be viewd as a symbolic sequence analogue of JEPA-style predictive learning: instead of predicting only continuous latent targets across views, it predicts compact symbolic sequence targets across content-preserving views, using alignment-aware and contrastive objectives to reduce collapse and preserve discriminative structure.',
     paperUrl: 'https://arxiv.org/abs/2605.06582',
     pdfUrl: 'https://arxiv.org/pdf/2605.06582',
+    thumbnailUrl: 'assets/thumbnails/PairAlign.webp',
+    thumbnailWidth: 720,
+    thumbnailHeight: 932,
     featured: false
   },
   {
@@ -253,6 +263,8 @@ const PAPERS = [
     paperUrl: 'https://tmlr.infinite-conf.org/paper_pages/r63GX9hKhC.html',
     pdfUrl: 'https://arxiv.org/pdf/2509.11717',
     thumbnailUrl: 'assets/thumbnails/CodecSep.webp',
+    thumbnailWidth: 640,
+    thumbnailHeight: 840,
     codeUrl: 'https://github.com/adhiraj69/CodecSep',
     videoUrl: 'https://youtu.be/LUBtTJN3QaI',
     featured: true
@@ -370,6 +382,54 @@ function linkPairAlignMentions(root = document.body) {
   linkPaperMentions(root);
 }
 
+const EXTERNAL_PERSON_TERMS = [
+  { pattern: 'Dr. Vipul Arora', url: 'https://vipular.github.io', label: 'Dr. Vipul Arora website' },
+  { pattern: 'Vipul Arora', url: 'https://vipular.github.io', label: 'Vipul Arora website' }
+];
+
+function linkExternalPersonMentions(root = document.body) {
+  if (!root) return;
+
+  const mentionRegex = new RegExp(`(${EXTERNAL_PERSON_TERMS.map((term) => escapeRegExp(term.pattern)).join('|')})`, 'gi');
+  const skipTags = new Set(['A', 'SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT']);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('a, .paper-jump, .pairalign-jump, .external-person-link')) return NodeFilter.FILTER_REJECT;
+      mentionRegex.lastIndex = 0;
+      return mentionRegex.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach((node) => {
+    const fragment = document.createDocumentFragment();
+    mentionRegex.lastIndex = 0;
+    const parts = node.nodeValue.split(mentionRegex);
+    parts.forEach((part) => {
+      if (!part) return;
+      const match = EXTERNAL_PERSON_TERMS.find((term) => term.pattern.toLowerCase() === part.toLowerCase());
+      if (match) {
+        const link = document.createElement('a');
+        link.href = match.url;
+        link.className = 'external-person-link';
+        link.textContent = part;
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        link.setAttribute('aria-label', `Open ${match.label}`);
+        fragment.appendChild(link);
+      } else {
+        fragment.appendChild(document.createTextNode(part));
+      }
+    });
+    node.replaceWith(fragment);
+  });
+}
+
 function createPaperCard(paper, index) {
   const card = document.createElement('article');
   card.className = `paper${paper.featured ? ' featured' : ''}`;
@@ -385,7 +445,7 @@ function createPaperCard(paper, index) {
     </div>
     <div class="paper-main">
       <a class="paper-thumb ${paper.thumbnailUrl ? '' : 'thumb-loading'}" href="${paper.pdfUrl || paper.paperUrl}" target="_blank" rel="noreferrer" aria-label="Open ${escapeHtml(paper.title)} PDF preview">
-        ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="eager" decoding="async" fetchpriority="low" />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
+        ${paper.thumbnailUrl ? `<img src="${paper.thumbnailUrl}" alt="First page thumbnail for ${escapeHtml(paper.title)}" loading="eager" decoding="async" fetchpriority="low"${paper.thumbnailWidth ? ` width="${paper.thumbnailWidth}"` : ''}${paper.thumbnailHeight ? ` height="${paper.thumbnailHeight}"` : ''} />` : `<div class="thumb-fallback"><div><span>PDF Preview</span>${escapeHtml(paper.title)}</div></div>`}
       </a>
       <div class="paper-copy">
         <h3${paper.id ? ` id="${escapeHtml(paper.id)}"` : ''}>${escapeHtml(paper.title)}</h3>
@@ -949,6 +1009,7 @@ renderPaperCards();
 hydratePdfThumbnails();
 initResearchDirectionCarousel();
 linkPaperMentions(document.body);
+linkExternalPersonMentions(document.body);
 runWhenBrowserIsIdle(() => {
   renderMediaCards();
 });
