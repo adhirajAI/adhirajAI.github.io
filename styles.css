@@ -1840,6 +1840,97 @@ html[data-theme="dark"] .avatar-profile-info a {
 
 
 
+
+/* Expanded research-direction popup card with title and description. */
+.direction-lightbox-card {
+  width: min(96vw, 1180px);
+  max-height: min(88vh, 940px);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05)),
+    rgba(4, 7, 18, 0.82);
+  border: 1px solid rgba(103, 232, 249, 0.26);
+  box-shadow:
+    0 30px 110px rgba(0, 0, 0, 0.52),
+    0 0 42px rgba(103, 232, 249, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  cursor: default;
+}
+
+.direction-lightbox-card img {
+  justify-self: center;
+  align-self: center;
+}
+
+.direction-lightbox-copy {
+  padding: 18px 20px 20px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(103, 232, 249, 0.18), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(244, 114, 255, 0.14), transparent 36%),
+    rgba(2, 6, 23, 0.78);
+  border: 1px solid rgba(103, 232, 249, 0.22);
+}
+
+.direction-lightbox-kicker {
+  margin: 0 0 8px;
+  color: #67e8f9;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.direction-lightbox-copy h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.22rem, 2.4vw, 2.15rem);
+  line-height: 1.14;
+  letter-spacing: -0.04em;
+}
+
+.direction-lightbox-summary {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(0.94rem, 1.4vw, 1.04rem);
+  line-height: 1.62;
+}
+
+.direction-lightbox-hint {
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 800;
+  text-align: center;
+}
+
+.direction-lightbox-copy .paper-jump {
+  color: #67e8f9;
+}
+
+.direction-lightbox-copy .paper-jump:hover,
+.direction-lightbox-copy .paper-jump:focus-visible {
+  color: #f0abfc;
+}
+
+@media (max-width: 860px) {
+  .direction-lightbox-card {
+    width: min(96vw, 760px);
+    max-height: 88vh;
+    padding: 12px;
+    gap: 12px;
+    border-radius: 22px;
+  }
+
+  .direction-lightbox-copy {
+    padding: 14px 15px 16px;
+    border-radius: 18px;
+  }
+}
+
 /* Smooth pop-up transitions for avatar profile and research-direction lightbox. */
 .avatar-modal,
 .direction-lightbox {
@@ -1872,7 +1963,7 @@ html[data-theme="dark"] .avatar-profile-info a {
   transform: translateY(0) scale(1);
 }
 
-.direction-lightbox img {
+.direction-lightbox-card {
   opacity: 0;
   transform: translateY(10px) scale(0.965);
   transition:
@@ -1881,18 +1972,18 @@ html[data-theme="dark"] .avatar-profile-info a {
   will-change: opacity, transform;
 }
 
-.direction-lightbox.is-open img {
+.direction-lightbox.is-open .direction-lightbox-card {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-.direction-lightbox p,
+.direction-lightbox-hint,
 .direction-lightbox-close {
   opacity: 0;
   transition: opacity 180ms linear;
 }
 
-.direction-lightbox.is-open p,
+.direction-lightbox.is-open .direction-lightbox-hint,
 .direction-lightbox.is-open .direction-lightbox-close {
   opacity: 1;
 }
@@ -1906,7 +1997,9 @@ html[data-theme="dark"] .avatar-profile-info a {
   .avatar-modal-frame,
   .direction-lightbox,
   .direction-lightbox img,
-  .direction-lightbox p,
+  .direction-lightbox-card,
+  .direction-lightbox-copy,
+  .direction-lightbox-hint,
   .direction-lightbox-close {
     transition: none;
     transform: none;
@@ -1932,5 +2025,21 @@ html[data-theme="dark"] .avatar-profile-info a {
 @media (hover: hover) and (pointer: fine) {
   .direction-card.is-active:hover img {
     filter: saturate(1.02) contrast(1.01);
+  }
+}
+
+
+/* Keep expanded research popup image balanced with the title/description card. */
+.direction-lightbox-card > img {
+  max-width: min(100%, 1500px);
+  max-height: min(66vh, 640px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 860px) {
+  .direction-lightbox-card > img {
+    max-height: 56vh;
   }
 }

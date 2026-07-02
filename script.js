@@ -588,8 +588,12 @@ function initResearchDirectionCarousel() {
   const next = document.querySelector('#direction-next');
   const lightbox = document.querySelector('#direction-lightbox');
   const lightboxImage = document.querySelector('#direction-lightbox-image');
+  const lightboxCard = document.querySelector('.direction-lightbox-card');
+  const lightboxKicker = document.querySelector('#direction-lightbox-kicker');
+  const lightboxTitle = document.querySelector('#direction-lightbox-title');
+  const lightboxSummary = document.querySelector('#direction-lightbox-summary');
   const lightboxClose = document.querySelector('.direction-lightbox-close');
-  if (!carousel || !kicker || !title || !summary || !stage || !track || !dots || !prev || !next || !lightbox || !lightboxImage || !lightboxClose) return;
+  if (!carousel || !kicker || !title || !summary || !stage || !track || !dots || !prev || !next || !lightbox || !lightboxImage || !lightboxCard || !lightboxKicker || !lightboxTitle || !lightboxSummary || !lightboxClose) return;
 
   let active = 0;
   let timer = null;
@@ -839,6 +843,11 @@ function initResearchDirectionCarousel() {
 
     lightboxImage.src = direction.image;
     lightboxImage.alt = direction.alt;
+    lightboxKicker.textContent = `Direction ${direction.number} of ${RESEARCH_DIRECTIONS.length}`;
+    lightboxTitle.textContent = direction.title;
+    lightboxSummary.textContent = direction.summary;
+    linkPaperMentions(lightboxTitle);
+    linkPaperMentions(lightboxSummary);
     lightbox.hidden = false;
     document.body.classList.add('direction-expanded');
 
@@ -857,6 +866,9 @@ function initResearchDirectionCarousel() {
     lightboxCloseTimer = window.setTimeout(() => {
       lightbox.hidden = true;
       lightboxImage.src = '';
+      lightboxKicker.textContent = '';
+      lightboxTitle.textContent = '';
+      lightboxSummary.textContent = '';
       lightboxCloseTimer = null;
     }, popupTransitionMs);
   }
@@ -911,7 +923,7 @@ function initResearchDirectionCarousel() {
   });
 
   lightbox.addEventListener('click', closeLightbox);
-  lightboxImage.addEventListener('click', closeLightbox);
+  lightboxCard.addEventListener('click', (event) => event.stopPropagation());
   lightboxClose.addEventListener('click', closeLightbox);
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
