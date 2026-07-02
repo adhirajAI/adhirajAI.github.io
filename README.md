@@ -8,9 +8,7 @@ The website presents research work, publications, projects, academic background,
 
 The portfolio is hosted at:
 
-```text
-https://adhirajAI.github.io
-```
+[https://adhirajAI.github.io](https://adhirajAI.github.io)
 
 ## Repository Contents
 
@@ -61,11 +59,20 @@ The portfolio highlights work in:
 
 Selected works presented on the website include:
 
-- **wav2tok: Deep Sequence Tokenizer for Audio Retrieval**
-- **wav2tok 2.0: Scalable Audio Tokenization Maintaining Explicit Pairwise Token Alignment for Efficient Audio Retrieval**
-- **Enc-Dec RNN Acoustic Word Embeddings learned via Pairwise Prediction**
-- **PairAlign: A Framework for Sequence Tokenization via Self-Alignment with Applications to Audio Tokenization**
-- **CodecSep: Prompt-Driven Universal Sound Separation on Neural Audio Codec Latents**
+- **wav2tok: Deep Sequence Tokenizer for Audio Retrieval**  
+  [OpenReview](https://openreview.net/forum?id=v8Mi8KU6056) · [PDF](https://openreview.net/pdf?id=v8Mi8KU6056) · [Code](https://github.com/madhavlab/wav2tok)
+
+- **wav2tok 2.0: Scalable Audio Tokenization Maintaining Explicit Pairwise Token Alignment for Efficient Audio Retrieval**  
+  [arXiv](https://arxiv.org/abs/2606.26824) · [PDF](https://arxiv.org/pdf/2606.26824) · [Code](https://github.com/adhiraj69/wav2tok2)
+
+- **Enc-Dec RNN Acoustic Word Embeddings learned via Pairwise Prediction**  
+  [ISCA Archive](https://www.isca-archive.org/interspeech_2023/banerjee23_interspeech.html) · [PDF](https://www.isca-archive.org/interspeech_2023/banerjee23_interspeech.pdf) · [Code](https://github.com/madhavlab/2023_adhiraj_encdecPairwisePred)
+
+- **PairAlign: A Framework for Sequence Tokenization via Self-Alignment with Applications to Audio Tokenization**  
+  [arXiv](https://arxiv.org/abs/2605.06582) · [PDF](https://arxiv.org/pdf/2605.06582)
+
+- **CodecSep: Prompt-Driven Universal Sound Separation on Neural Audio Codec Latents**  
+  [TMLR Infinite Conference](https://tmlr.infinite-conf.org/paper_pages/r63GX9hKhC.html) · [PDF](https://arxiv.org/pdf/2509.11717) · [Code](https://github.com/adhiraj69/CodecSep) · [Video](https://youtu.be/LUBtTJN3QaI)
 
 ## License
 
