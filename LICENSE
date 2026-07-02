@@ -1,0 +1,76 @@
+Copyright (c) 2026 Adhiraj Banerjee
+
+This repository contains both website source code and personal/research portfolio content.
+Different parts of the repository are licensed differently, as described below.
+
+===============================================================================
+1. SOURCE CODE LICENSE
+===============================================================================
+
+The website source code, including HTML, CSS, JavaScript, configuration files,
+and other implementation files, is licensed under the MIT License.
+
+MIT License
+
+Copyright (c) 2026 Adhiraj Banerjee
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of the website source code and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+===============================================================================
+2. CONTENT LICENSE
+===============================================================================
+
+All non-code content in this repository and website is licensed under the
+Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+License (CC BY-NC-ND 4.0), unless otherwise stated.
+
+This includes, but is not limited to:
+
+- research descriptions
+- publication summaries
+- research direction text
+- portfolio text
+- diagrams
+- images
+- figures
+- profile content
+- academic and professional descriptions
+- presentation-style visual material
+- written descriptions of projects, awards, talks, and experience
+
+You may share this content with appropriate attribution for non-commercial
+purposes, but you may not modify it, create derivative works from it, or use it
+commercially without explicit written permission from the author.
+
+A human-readable summary of the CC BY-NC-ND 4.0 license is available at:
+https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+The full legal code of the CC BY-NC-ND 4.0 license is available at:
+https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+
+===============================================================================
+3. THIRD-PARTY MATERIALS
+===============================================================================
+
+Third-party logos, institutional marks, linked papers, embedded videos,
+externally hosted assets, and referenced materials remain the property of their
+respective owners and are not covered by the licenses above unless explicitly
+stated.
+
+This license does not grant rights to use third-party trademarks, institutional
+logos, publisher-hosted materials, conference assets, or external media.
