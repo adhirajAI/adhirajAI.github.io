@@ -599,17 +599,29 @@ function initResearchDirectionCarousel() {
   let touchStartY = 0;
   const delay = 5200;
   const manualPauseMs = 45 * 1000;
+  const slideDuration = 380;
+  const copySwapDelay = 85;
 
   function prefersReducedCarouselMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  const imageAspectRatios = new Map();
+  const imageAspectRatios = new Map([
+    [0, 984 / 1400],
+    [1, 788 / 1400],
+    [2, 788 / 1400],
+    [3, 788 / 1400],
+    [4, 788 / 1400],
+    [5, 788 / 1400],
+    [6, 788 / 1400]
+  ]);
 
   function preloadResearchDirectionImages() {
     RESEARCH_DIRECTIONS.forEach((direction, index) => {
       const image = new Image();
       image.decoding = 'async';
+      image.loading = 'eager';
+      image.fetchPriority = index <= 2 ? 'high' : 'low';
       image.onload = () => {
         if (image.naturalWidth && image.naturalHeight) {
           imageAspectRatios.set(index, image.naturalHeight / image.naturalWidth);
@@ -617,11 +629,12 @@ function initResearchDirectionCarousel() {
         }
       };
       image.src = direction.image;
+      if (typeof image.decode === 'function') image.decode().catch(() => {});
     });
   }
 
   function getDirectionAspectRatio(index) {
-    return imageAspectRatios.get(getIndex(index)) || (789 / 1400);
+    return imageAspectRatios.get(getIndex(index)) || (788 / 1400);
   }
 
   function getActiveCardWidth() {
@@ -638,7 +651,7 @@ function initResearchDirectionCarousel() {
     stage.classList.toggle('is-resizing', animate);
     stage.style.height = `${nextHeight}px`;
     if (animate) {
-      window.setTimeout(() => stage.classList.remove('is-resizing'), slideDuration + 80);
+      window.setTimeout(() => stage.classList.remove('is-resizing'), slideDuration + 40);
     }
   }
 
@@ -739,7 +752,7 @@ function initResearchDirectionCarousel() {
       window.requestAnimationFrame(() => {
         carousel.classList.remove('direction-copy-changing');
       });
-    }, 160);
+    }, copySwapDelay);
   }
 
   function render(index) {
@@ -754,54 +767,61 @@ function initResearchDirectionCarousel() {
   }
 
   let isSliding = false;
-  const slideDuration = 560;
 
   function move(delta, userInitiated = true) {
     const directionDelta = delta === 0 ? 0 : delta > 0 ? 1 : -1;
     if (!directionDelta || isSliding) return;
     isSliding = true;
+    const previousActive = active;
     const nextActive = getIndex(active + directionDelta);
 
     track.classList.remove('slide-left', 'slide-right');
 
     if (directionDelta > 0) {
       track.replaceChildren(
-        makeCard(active - 1, 'prev'),
-        makeCard(active, 'active'),
-        makeCard(active + 1, 'next'),
-        makeCard(active + 2, 'far-next')
+        makeCard(previousActive - 1, 'prev'),
+        makeCard(previousActive, 'active'),
+        makeCard(previousActive + 1, 'next'),
+        makeCard(previousActive + 2, 'far-next')
       );
-      window.requestAnimationFrame(() => {
-        track.classList.add('slide-left');
-        track.children[0]?.classList.replace('is-prev', 'is-far-prev');
-        track.children[1]?.classList.replace('is-active', 'is-prev');
-        track.children[2]?.classList.replace('is-next', 'is-active');
-        track.children[3]?.classList.replace('is-far-next', 'is-next');
-      });
     } else {
       track.replaceChildren(
-        makeCard(active - 2, 'far-prev'),
-        makeCard(active - 1, 'prev'),
-        makeCard(active, 'active'),
-        makeCard(active + 1, 'next')
+        makeCard(previousActive - 2, 'far-prev'),
+        makeCard(previousActive - 1, 'prev'),
+        makeCard(previousActive, 'active'),
+        makeCard(previousActive + 1, 'next')
       );
-      window.requestAnimationFrame(() => {
-        track.classList.add('slide-right');
-        track.children[0]?.classList.replace('is-far-prev', 'is-prev');
-        track.children[1]?.classList.replace('is-prev', 'is-active');
-        track.children[2]?.classList.replace('is-active', 'is-next');
-        track.children[3]?.classList.replace('is-next', 'is-far-next');
-      });
     }
 
-    active = nextActive;
-    syncStageHeight(active, true);
-    updateDirectionText(active, true);
+    // Let the browser paint the starting layout first. This prevents the image,
+    // side-card, and height changes from being batched into an abrupt snap.
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (directionDelta > 0) {
+          track.classList.add('slide-left');
+          track.children[0]?.classList.replace('is-prev', 'is-far-prev');
+          track.children[1]?.classList.replace('is-active', 'is-prev');
+          track.children[2]?.classList.replace('is-next', 'is-active');
+          track.children[3]?.classList.replace('is-far-next', 'is-next');
+        } else {
+          track.classList.add('slide-right');
+          track.children[0]?.classList.replace('is-far-prev', 'is-prev');
+          track.children[1]?.classList.replace('is-prev', 'is-active');
+          track.children[2]?.classList.replace('is-active', 'is-next');
+          track.children[3]?.classList.replace('is-next', 'is-far-next');
+        }
+
+        active = nextActive;
+        syncStageHeight(active, true);
+        updateDirectionText(active, true);
+      });
+    });
+
     window.setTimeout(() => {
       render(active);
       track.classList.remove('slide-left', 'slide-right');
       isSliding = false;
-    }, slideDuration + 30);
+    }, slideDuration + 55);
 
     if (userInitiated) pauseAfterInteraction();
   }
